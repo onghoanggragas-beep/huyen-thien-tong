@@ -1,11 +1,108 @@
 <!DOCTYPE html>
-<html>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huyền Thiên Tông</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0b0f14;
+      color: #eaeaea;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 12px;
+      background: linear-gradient(90deg, #1e2a3a, #0b0f14);
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      border-bottom: 1px solid #222;
+    }
+
+    #log {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .npc {
+      align-self: flex-start;
+      background: #1c2430;
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 85%;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .player {
+      align-self: flex-end;
+      background: #2e7df6;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 85%;
+      font-size: 15px;
+    }
+
+    footer {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid #222;
+      background: #0f141c;
+    }
+
+    #input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      background: #1c2430;
+      color: #fff;
+    }
+
+    #send {
+      padding: 0 16px;
+      border-radius: 10px;
+      border: none;
+      background: #2e7df6;
+      color: white;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    #send:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+
 <body>
-<div id="log"></div>
-<input id="i" placeholder="Nói với NPC..." />
-<button onclick="send()">Gửi</button>
-<button onclick="cult()">🧘 Tu luyện</button>
-<script src="chat.js"></script>
+
+  <header>
+    🏯 HUYỀN THIÊN TÔNG
+  </header>
+
+  <div id="log"></div>
+
+  <footer>
+    <input id="input" placeholder="Nhập lời nói... (vd: bái kiến tông chủ)" />
+    <button id="send">Gửi</button>
+  </footer>
+
+  <script src="chat.js"></script>
 </body>
 </html>
