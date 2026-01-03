@@ -8,23 +8,62 @@
 * { box-sizing: border-box; }
 
 body {
-  margin: 0;
-  background: linear-gradient(#0b0f14, #05070a);
-  color: #e5e7eb;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
-}
+  <body>
 
-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #0f172a;
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
-  letter-spacing: 1px;
-  border-bottom: 1px solid #1e293b;
-}
+<header>🏯 HUYỀN THIÊN TÔNG</header>
+
+<div id="game">
+
+  <div id="status">
+    <div class="status-box">
+      ⚡ Cảnh giới: <span id="realm">Luyện Khí tầng 1</span><br>
+      🌬️ Linh khí: <span id="qi">0</span>/<span id="maxQi">100</span>
+    </div>
+    <div class="status-box">
+      ❤️ HP: <span id="hp">100</span><br>
+      🎒 Tụ linh đan ×1
+    </div>
+  </div>
+
+  <div id="log"></div>
+
+  <div id="actions">
+    <button id="absorbBtn">🌬️ Hấp thụ</button>
+    <button id="breakBtn" style="display:none">🔓 Đột phá</button>
+    <button id="fightBtn">⚔️ Chiến đấu</button>
+  </div>
+
+  <footer>
+    <input id="input" placeholder="Nhập lời nói..." />
+    <button id="send">Gửi</button>
+  </footer>
+
+</div>
+
+<!-- TẠO NHÂN VẬT -->
+<div id="createChar">
+  <div>
+    <h3>🎲 Tạo nhân vật</h3>
+
+    <label>👤 Tên</label>
+    <input id="charName" placeholder="Nhập tên..." />
+
+    <label style="margin-top:8px;display:block">⚧️ Giới tính</label>
+    <select id="charGender" style="width:100%;padding:8px;border-radius:8px;">
+      <option>Nam</option>
+      <option>Nữ</option>
+      <option>Khác</option>
+    </select>
+
+    <p style="margin-top:10px">🌱 Linh căn: <span id="lingCan"></span></p>
+    <div id="tienThienList"></div>
+
+    <button id="confirmChar" style="margin-top:10px">Bắt đầu tu tiên</button>
+  </div>
+</div>
+
+<script src="chat.js"></script>
+</body>
 
 #game {
   display: flex;
