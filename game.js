@@ -58,13 +58,8 @@ function login() {
 ================================================= */
 
 function hideAllScreens() {
-  [
-    "login-screen",
-    "create-screen",
-    "game-screen"
-  ].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.add("hidden");
+  document.querySelectorAll(".screen").forEach(el => {
+    el.classList.add("hidden");
   });
 }
 
