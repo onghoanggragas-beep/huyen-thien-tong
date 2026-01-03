@@ -28,3 +28,6 @@ log("✨ Đột phá thành công!");
 saveChar(c);
 }
 }
+window.breakThrough = function () {
+  alert("⚡ Đột phá (chưa triển khai)");
+};
