@@ -1,136 +1,44 @@
-/* =================================================
-   ACCOUNT + STORAGE (ĐƠN GIẢN – ỔN ĐỊNH)
-================================================= */
+function login(){
+  const u = username.value.trim();
+  const p = password.value.trim();
+  if(!u || !p) return alert("Nhập tài khoản");
 
-function getAccounts() {
-  return JSON.parse(localStorage.getItem("accounts") || "{}");
-}
-
-function saveAccounts(acc) {
-  localStorage.setItem("accounts", JSON.stringify(acc));
-}
-
-/* =================================================
-   LOGIN
-================================================= */
-
-function login() {
-  const user = document.getElementById("username").value.trim();
-  const pass = document.getElementById("password").value.trim();
-
-  if (!user || !pass) {
-    alert("Vui lòng nhập tài khoản và mật khẩu");
-    return;
+  let acc = JSON.parse(localStorage.getItem("acc_"+u));
+  if(!acc){
+    acc = { password:p, character:null };
+    localStorage.setItem("acc_"+u, JSON.stringify(acc));
   }
+  if(acc.password!==p) return alert("Sai mật khẩu");
 
-  let accounts = getAccounts();
+  localStorage.setItem("currentUser", u);
 
-  // Đăng ký nếu chưa tồn tại
-  if (!accounts[user]) {
-    accounts[user] = {
-      password: pass,
-      character: null
-    };
-    saveAccounts(accounts);
-  }
-  // Đăng nhập
-  else if (accounts[user].password !== pass) {
-    alert("Sai mật khẩu");
-    return;
-  }
-
-  localStorage.setItem("currentUser", user);
-
-  // Điều hướng màn hình
-  if (accounts[user].character) {
-    localStorage.setItem(
-      "character",
-      JSON.stringify(accounts[user].character)
-    );
+  if(acc.character){
+    localStorage.setItem("character", JSON.stringify(acc.character));
     showGame();
   } else {
     showCreate();
   }
 }
 
-/* =================================================
-   SCREEN CONTROL (ĐÚNG ID HTML)
-================================================= */
+function hideAll(){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
+}
+function showCreate(){ hideAll(); create-screen.classList.remove("hidden"); }
+function showGame(){ hideAll(); game-screen.classList.remove("hidden"); render(); }
 
-function hideAllScreens() {
-  document.querySelectorAll(".screen").forEach(el => {
-    el.classList.add("hidden");
-  });
+function loadChar(){ return JSON.parse(localStorage.getItem("character")); }
+function saveChar(c){
+  const u=localStorage.getItem("currentUser");
+  const acc=JSON.parse(localStorage.getItem("acc_"+u));
+  acc.character=c;
+  localStorage.setItem("acc_"+u,JSON.stringify(acc));
+  localStorage.setItem("character",JSON.stringify(c));
 }
 
-function showCreate() {
-  hideAllScreens();
-  document
-    .getElementById("create-screen")
-    .classList.remove("hidden");
+function render(){
+  renderCharacterInfo();
 }
 
-function showGame() {
-  hideAllScreens();
-  document
-    .getElementById("game-screen")
-    .classList.remove("hidden");
-  render();
+function log(msg){
+  log.innerHTML+=`<div>${msg}</div>`;
 }
-
-/* =================================================
-   CHARACTER STORAGE
-================================================= */
-
-function loadChar() {
-  return JSON.parse(localStorage.getItem("character"));
-}
-
-function saveChar(char) {
-  const user = localStorage.getItem("currentUser");
-  let accounts = getAccounts();
-
-  accounts[user].character = char;
-  saveAccounts(accounts);
-
-  localStorage.setItem("character", JSON.stringify(char));
-}
-
-/* =================================================
-   GAME RENDER
-================================================= */
-
-function render() {
-  const c = loadChar();
-  if (!c) return;
-
-  const realm = REALMS[c.realmIndex];
-
-  document.getElementById("charInfo").innerText =
-    `${c.name} (${c.gender}) - ${c.root.typeName}`;
-
-  document.getElementById("realmInfo").innerText =
-    `${realm.name} - Tầng ${c.stage}`;
-
-  document.getElementById("qiInfo").innerText =
-    `Linh khí: ${c.qi.toFixed(1)} / ${realm.maxQi}`;
-}
-
-/* =================================================
-   AUTO LOOP (TU LUYỆN TREO)
-================================================= */
-
-setInterval(() => {
-  if (typeof updateCultivation === "function") {
-    updateCultivation();
-    render();
-  }
-}, 1000);
-// ===== DEBUG CLICK =====
-function openInventory() {
-  alert("ĐÃ CLICK KHO ĐỒ");
-}
-
-function breakThrough() {
-  alert("ĐÃ CLICK ĐỘT PHÁ");
-     }
