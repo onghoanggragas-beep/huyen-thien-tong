@@ -81,3 +81,59 @@ confirmBtn.onclick=()=>{
   createBox.style.display="none";
   add("✨ Nhân vật đã được tạo. Con đường tu tiên bắt đầu!");
 };
+const createBox = document.getElementById("createChar");
+const listBox = document.getElementById("tienThienList");
+const confirmBtn = document.getElementById("confirmChar");
+const lingCanEl = document.getElementById("lingCan");
+
+const nameInput = document.getElementById("charName");
+const genderSelect = document.getElementById("charGender");
+
+let chosenTT = [];
+let character = {};
+
+fetch("/enter").then(r=>r.json()).then(d=>{
+  lingCanEl.innerText = `${d.lingCan.name} linh căn [${d.lingCan.grade}]`;
+
+  d.roll.forEach(t=>{
+    const div = document.createElement("div");
+    div.innerText = `✨ ${t.name} [${t.grade}]`;
+    div.style.cursor = "pointer";
+    div.onclick = () => {
+      if (chosenTT.includes(t)) {
+        chosenTT = chosenTT.filter(x => x !== t);
+        div.style.color = "";
+      } else if (chosenTT.length < 3) {
+        chosenTT.push(t);
+        div.style.color = "gold";
+      }
+    };
+    listBox.appendChild(div);
+  });
+});
+
+confirmBtn.onclick = () => {
+  const name = nameInput.value.trim();
+  const gender = genderSelect.value;
+
+  if (!name) {
+    alert("Phải nhập tên nhân vật");
+    return;
+  }
+
+  if (chosenTT.length !== 3) {
+    alert("Phải chọn đúng 3 tiên thiên");
+    return;
+  }
+
+  character = {
+    name,
+    gender,
+    lingCan: lingCanEl.innerText,
+    tienThien: chosenTT
+  };
+
+  createBox.style.display = "none";
+
+  add(`✨ ${character.name} (${character.gender}) bước vào con đường tu tiên.`);
+};
