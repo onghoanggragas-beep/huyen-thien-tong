@@ -19,7 +19,7 @@ function login() {
 
   let accounts = getAccounts();
 
-  // Đăng ký
+  // ĐĂNG KÝ
   if (!accounts[user]) {
     accounts[user] = {
       password: pass,
@@ -27,23 +27,35 @@ function login() {
     };
     saveAccounts(accounts);
   }
-  // Đăng nhập
-  else if (accounts[user].password !== pass) {
-    alert("Sai mật khẩu");
+  // ĐĂNG NHẬP
+  else {
+    if (accounts[user].password !== pass) {
+      alert("Sai mật khẩu");
+      return;
+    }
+  }
+
+  // set user hiện tại
+  localStorage.setItem("currentUser", user);
+
+  // ẨN LOGIN
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("create").classList.add("hidden");
+  document.getElementById("game").classList.add("hidden");
+
+  // CHƯA CÓ NHÂN VẬT → TẠO
+  if (!accounts[user].character) {
+    document.getElementById("create").classList.remove("hidden");
     return;
   }
 
-  localStorage.setItem("currentUser", user);
-
-  document.getElementById("login").classList.add("hidden");
-
-  if (accounts[user].character) {
-    localStorage.setItem("character", JSON.stringify(accounts[user].character));
-    startGame();
-  } else {
-    document.getElementById("create").classList.remove("hidden");
-  }
-}
+  // ĐÃ CÓ NHÂN VẬT → VÀO GAME
+  localStorage.setItem(
+    "character",
+    JSON.stringify(accounts[user].character)
+  );
+  startGame();
+    }
 
 /* ================= CHARACTER STORAGE ================= */
 
