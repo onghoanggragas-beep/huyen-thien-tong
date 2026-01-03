@@ -93,3 +93,12 @@ button {
   width:90%;
   background:#ff9f43;
 }
+.panel h3 {
+  margin-top: 0;
+  color: #ffd36b;
+}
+
+.panel button {
+  width: 90%;
+  margin: 4px 0;
+    }
