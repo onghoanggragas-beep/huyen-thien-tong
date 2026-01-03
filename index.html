@@ -1,270 +1,59 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>🧘 Tu Tiên RPG</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: radial-gradient(circle at top, #1b2233, #05080f);
-  color: #fff;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg,#3b82f6,#2563eb);
-  color: white;
-}
-
-button.red { background: linear-gradient(135deg,#ef4444,#b91c1c); }
-button.green { background: linear-gradient(135deg,#22c55e,#15803d); }
-
-.panel {
-  background: rgba(255,255,255,0.06);
-  border-radius: 16px;
-  padding: 14px;
-  margin: 12px;
-}
-
-.small {
-  font-size: 14px;
-  max-height: 160px;
-  overflow-y: auto;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-}
-
-.box {
-  background: #0f172a;
-  padding: 20px;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 380px;
-}
-
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 6px 0;
-  border-radius: 8px;
-  border: none;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Tu Tiên Idle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen" class="overlay">
-  <div class="box">
-    <h2>🔐 Đăng nhập</h2>
-    <input id="loginUser" placeholder="Tài khoản">
-    <input id="loginPass" type="password" placeholder="Mật khẩu">
-    <button onclick="login()">Đăng nhập</button>
-  </div>
+<div id="app">
+
+  <!-- LOGIN -->
+  <section id="login-screen" class="screen">
+    <h1>Tu Tiên Thế Giới</h1>
+    <input id="username" placeholder="Tài khoản">
+    <input id="password" type="password" placeholder="Mật khẩu">
+    <button onclick="login()">Đăng nhập / Đăng ký</button>
+  </section>
+
+  <!-- CREATE CHARACTER -->
+  <section id="create-screen" class="screen hidden">
+    <h2>Tạo Nhân Vật</h2>
+
+    <input id="char-name" placeholder="Tên nhân vật">
+
+    <div class="gender">
+      <button onclick="selectGender('Nam')">Nam</button>
+      <button onclick="selectGender('Nữ')">Nữ</button>
+    </div>
+
+    <div id="roll-result"></div>
+    <button onclick="rollCharacter()">🎲 Roll</button>
+    <button onclick="confirmCharacter()">Xác nhận</button>
+  </section>
+
+  <!-- GAME -->
+  <section id="game-screen" class="screen hidden">
+    <h2 id="charInfo"></h2>
+
+    <div class="panel">
+      <p id="realmInfo"></p>
+      <p id="qiInfo"></p>
+    </div>
+
+    <button onclick="toggleCultivation()">Tu luyện / Dừng</button>
+    <button onclick="breakThrough()">Đột Phá</button>
+
+    <div id="log" class="log"></div>
+  </section>
+
 </div>
 
-<!-- CREATE CHARACTER -->
-<div id="createScreen" class="overlay" style="display:none">
-  <div class="box">
-    <h2>🎲 Tạo nhân vật</h2>
-    <input id="charName" placeholder="Tên nhân vật">
-    <select id="gender">
-      <option>Nam</option>
-      <option>Nữ</option>
-    </select>
-
-    <p>🌱 Linh căn: <b id="linhCan"></b></p>
-    <p>✨ Tiên thiên:</p>
-    <ul id="tienThienList"></ul>
-
-    <button class="green" onclick="roll()">🎲 Roll lại</button>
-    <button onclick="confirmChar()">✅ Xác nhận</button>
-  </div>
-</div>
-
-<!-- GAME -->
-<div id="game" style="display:none">
-  <h2 style="text-align:center">🧘 Tu Tiên RPG</h2>
-
-  <div class="panel" id="charInfo"></div>
-
-  <div class="panel">
-    <div>⚡ Linh khí: <span id="qi">0</span>/100</div>
-    <div>❤️ HP: <span id="hp">100</span></div>
-  </div>
-
-  <div class="panel">
-    <button onclick="startCultivation()">🧘 Bắt đầu tu luyện</button>
-    <button onclick="stopCultivation()">⏸ Dừng</button>
-    <button onclick="openCombat()">⚔️ Chiến đấu</button>
-  </div>
-
-  <div class="panel small" id="log"></div>
-</div>
-
-<!-- COMBAT -->
-<div id="combatScreen" class="overlay" style="display:none">
-  <div class="box">
-    <canvas id="combatCanvas" width="300" height="160"
-      style="background:#020617;border-radius:12px"></canvas>
-    <button onclick="playerAttack()">🗡️ Đánh</button>
-    <button class="red" onclick="endCombat()">🏃 Rút lui</button>
-  </div>
-</div>
-
-<script>
-/* ===== DATA ===== */
-const linhCans = ["Kim","Mộc","Thủy","Hỏa","Thổ","Lôi","Băng","Âm","Dương"];
-const tienThiens = [
-  "Thiên mệnh chi tử","Người xuyên không","Linh hồn cường đại",
-  "Khí vận đen đủi","Đạo tâm kiên định","Huyết mạch cổ xưa",
-  "Ngộ tính siêu phàm","Trời ghét đất ghét"
-];
-
-let player = null;
-let cultiTimer = null;
-let enemy = null;
-
-/* ===== LOGIN ===== */
-function login(){
-  document.getElementById("loginScreen").style.display="none";
-  document.getElementById("createScreen").style.display="flex";
-  roll();
-}
-
-/* ===== CREATE ===== */
-function roll(){
-  document.getElementById("linhCan").innerText =
-    linhCans[Math.floor(Math.random()*linhCans.length)];
-
-  const list = document.getElementById("tienThienList");
-  list.innerHTML="";
-  [...tienThiens].sort(()=>0.5-Math.random()).slice(0,3)
-    .forEach(t=>{
-      const li=document.createElement("li");
-      li.innerText=t;
-      list.appendChild(li);
-    });
-}
-
-function confirmChar(){
-  player={
-    name:charName.value||"Vô danh",
-    gender:gender.value,
-    linhCan:linhCan.innerText,
-    tienThien:[...tienThienList.children].map(li=>li.innerText),
-    qi:0,
-    hp:100
-  };
-  createScreen.style.display="none";
-  game.style.display="block";
-  render();
-}
-
-/* ===== GAME ===== */
-function render(){
-  charInfo.innerHTML=`
-👤 ${player.name} (${player.gender})<br>
-🌱 ${player.linhCan}<br>
-✨ ${player.tienThien.join(", ")}
-`;
-  qi.innerText=player.qi;
-  hp.innerText=player.hp;
-}
-
-function log(msg){
-  logDiv=document.getElementById("log");
-  logDiv.innerHTML+=msg+"<br>";
-  logDiv.scrollTop=9999;
-}
-
-function startCultivation(){
-  if(cultiTimer) return;
-  log("🧘 Bắt đầu tu luyện...");
-  cultiTimer=setInterval(()=>{
-    player.qi++;
-    if(player.qi>=100){
-      player.qi=100;
-      stopCultivation();
-      log("⚡ Linh khí đầy!");
-    }
-    render();
-  },500);
-}
-
-function stopCultivation(){
-  clearInterval(cultiTimer);
-  cultiTimer=null;
-}
-
-/* ===== COMBAT ===== */
-function openCombat(){
-  combatScreen.style.display="flex";
-  enemy={name:"Yêu thú",hp:40,atk:6};
-  drawCombat();
-  log("⚔️ Gặp Yêu thú!");
-}
-
-function playerAttack(){
-  enemy.hp-=10;
-  log("🗡️ Bạn đánh Yêu thú");
-  if(enemy.hp<=0){
-    log("🎉 Chiến thắng!");
-    endCombat();
-    return;
-  }
-  setTimeout(()=>{
-    player.hp-=enemy.atk;
-    log("💥 Yêu thú phản công");
-    if(player.hp<=0){
-      log("☠️ Bạn bại trận!");
-      endCombat();
-    }
-    render();
-    drawCombat();
-  },500);
-}
-
-function endCombat(){
-  combatScreen.style.display="none";
-  enemy=null;
-}
-
-function drawCombat(){
-  const c=combatCanvas;
-  const ctx=c.getContext("2d");
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.fillStyle="cyan";
-  ctx.fillRect(30,80,30,30);
-  ctx.fillStyle="red";
-  ctx.fillRect(220,80,30,30);
-}
 <script src="data.js"></script>
-
 <script src="character.js"></script>
 <script src="cultivation.js"></script>
-<script src="battle.js"></script>
-<script src="inventory.js"></script>
-<script src="map.js"></script>
-
 <script src="game.js"></script>
-
 </body>
 </html>
