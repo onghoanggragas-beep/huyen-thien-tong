@@ -1,4 +1,8 @@
-// ===== DOM =====
+/* =====================================================
+   TU TIÊN WEB GAME – FULL CORE (CHAR + CULT + COMBAT)
+   ===================================================== */
+
+/* ================= DOM ================= */
 const log = document.getElementById("log");
 const absorbBtn = document.getElementById("absorbBtn");
 const breakBtn = document.getElementById("breakBtn");
@@ -7,9 +11,7 @@ const fightBtn = document.getElementById("fightBtn");
 const realmEl = document.getElementById("realm");
 const qiEl = document.getElementById("qi");
 const maxQiEl = document.getElementById("maxQi");
-const hpEl = document.getElementById("hp");
 
-// Create character
 const createBox = document.getElementById("createChar");
 const confirmBtn = document.getElementById("confirmChar");
 const nameInput = document.getElementById("charName");
@@ -17,160 +19,137 @@ const genderSelect = document.getElementById("charGender");
 const lingCanEl = document.getElementById("lingCan");
 const tienThienList = document.getElementById("tienThienList");
 
-// ===== DATA =====
-const GRADES = [
-  { name: "Hạ", rate: 40 },
-  { name: "Trung", rate: 30 },
-  { name: "Thượng", rate: 18 },
-  { name: "Cực", rate: 9 },
-  { name: "Tiên", rate: 3 }
+/* ================= DATA ================= */
+const ELEMENTS = ["Kim","Mộc","Thủy","Hỏa","Thổ","Phong","Lôi","Băng","Âm","Dương"];
+
+const LINH_CAN_TYPES = [
+  { name:"Đơn linh căn", count:1, speed:1.4 },
+  { name:"Song linh căn", count:2, speed:1.2 },
+  { name:"Tam linh căn", count:3, speed:1.0 },
+  { name:"Tứ linh căn", count:4, speed:0.85 },
+  { name:"Ngũ hành linh căn", count:5, speed:0.7 },
+  { name:"Dị linh căn", count:1, speed:1.1, special:true }
 ];
 
-const LINH_CAN = [
-  { name: "Kim", desc: "Công kích sắc bén" },
-  { name: "Mộc", desc: "Sinh mệnh dồi dào" },
-  { name: "Thủy", desc: "Hồi phục nhanh" },
-  { name: "Hỏa", desc: "Bộc phát mạnh" },
-  { name: "Thổ", desc: "Phòng ngự vững chắc" },
-  { name: "Phong", desc: "Tốc độ cao" },
-  { name: "Lôi", desc: "Sát thương bạo phát" },
-  { name: "Băng", desc: "Khống chế mạnh" }
+const TIEN_THIEN_EFFECT = {
+  "Thiên Mệnh Chi Tử":1.25,
+  "Ngộ Tính Tuyệt Luân":1.2,
+  "Khí Vận Gia Thân":1.15,
+  "Người Xuyên Không":1.1,
+  "Chiến Đấu Cuồng Nhân":0.95
+};
+
+const VO_KY = {
+  Kim:["Kim Quang Trảm","Thiết Kiếm Quyết"],
+  Mộc:["Thanh Mộc Chưởng","Sinh Sinh Bất Tức"],
+  Thủy:["Hàn Thủy Chưởng","Thủy Lưu Bộ"],
+  Hỏa:["Liệt Diễm Quyền","Hỏa Long Kích"],
+  Thổ:["Cương Thạch Thể","Địa Chấn Kích"],
+  Phong:["Phong Hành Bộ","Cuồng Phong Trảm"],
+  Lôi:["Lôi Đình Chưởng","Thiên Lôi Phạt"],
+  Băng:["Hàn Băng Phong"],
+  Âm:["Âm Sát Chưởng"],
+  Dương:["Dương Viêm Quyền"]
+};
+
+/* ==== CÔNG PHÁP (RÚT GỌN HIỂN THỊ – ĐÃ GỘP LOGIC) ==== */
+const CONG_PHAP = [
+  {name:"Thiên Đạo Chân Kinh",tier:"Thiên",grade:"Cực",element:"Hỗn",mult:2.6},
+  {name:"Vạn Lôi Thiên Kinh",tier:"Thiên",grade:"Cực",element:"Lôi",mult:2.7},
+  {name:"Hỏa Linh Chân Quyết",tier:"Địa",grade:"Thượng",element:"Hỏa",mult:1.9},
+  {name:"Phong Linh Đại Pháp",tier:"Địa",grade:"Thượng",element:"Phong",mult:1.85},
+  {name:"Thanh Mộc Tâm Kinh",tier:"Huyền",grade:"Thượng",element:"Mộc",mult:1.45},
+  {name:"Kim Cương Công",tier:"Huyền",grade:"Hạ",element:"Kim",mult:1.35},
+  {name:"Hỏa Cầu Công",tier:"Hoàng",grade:"Hạ",element:"Hỏa",mult:1.15},
+  {name:"Thủy Lưu Công",tier:"Hoàng",grade:"Hạ",element:"Thủy",mult:1.1}
 ];
 
-const TIEN_THIEN = [
-  { name: "Thiên Mệnh Chi Tử", desc: "Khí vận cực cao" },
-  { name: "Ngộ Tính Tuyệt Luân", desc: "Tu luyện nhanh vượt trội" },
-  { name: "Đệ Tử Thế Gia", desc: "Khởi đầu có tài nguyên" },
-  { name: "Người Xuyên Không", desc: "Biết trước một phần thế giới" },
-  { name: "Khí Vận Gia Thân", desc: "Dễ gặp kỳ ngộ" },
-  { name: "Thần Hồn Cường Đại", desc: "Thần thức vượt trội" },
-  { name: "Chiến Đấu Cuồng Nhân", desc: "Càng đánh càng mạnh" },
-  { name: "Tiên Thiên Đạo Thể", desc: "Phù hợp mọi công pháp" },
-  { name: "Hỗn Độn Linh Thể", desc: "Không bị hạn chế linh căn" },
-  { name: "Bất Diệt Thể Phách", desc: "Hồi phục nhanh" }
-];
+/* ================= STATE ================= */
+let qi=0, maxQi=100, realm=1;
+let linhCan=null, tienThien=[], congPhap=null;
 
-// ===== STATE =====
-let qi = 0;
-let maxQi = 100;
-let realm = 1;
-let hp = 100;
-
-let rolledLingCan = null;
-let rolledTienThien = [];
-let chosenTT = [];
-
-// ===== UTILS =====
-function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-
-function rollGrade(){
-  const r = Math.random()*100;
-  let sum = 0;
-  for(const g of GRADES){
-    sum += g.rate;
-    if(r <= sum) return g.name;
-  }
-  return "Hạ";
-}
-
-function add(text, cls="npc"){
-  const div=document.createElement("div");
-  div.className=cls;
-  div.innerText=text;
-  log.appendChild(div);
+/* ================= UTILS ================= */
+function rand(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function add(msg){
+  const d=document.createElement("div");
+  d.innerText=msg;
+  log.appendChild(d);
   log.scrollTop=log.scrollHeight;
 }
 
-// ===== ROLL CHARACTER =====
-function rollCharacter(){
-  chosenTT = [];
-  tienThienList.innerHTML = "";
-
-  const lc = rand(LINH_CAN);
-  rolledLingCan = {
-    name: lc.name,
-    grade: rollGrade(),
-    desc: lc.desc
-  };
-
-  lingCanEl.innerText =
-    `${rolledLingCan.name} linh căn [${rolledLingCan.grade}] – ${rolledLingCan.desc}`;
-
-  rolledTienThien = [...TIEN_THIEN]
-    .sort(()=>0.5-Math.random())
-    .slice(0,5)
-    .map(t => ({
-      ...t,
-      grade: rollGrade()
-    }));
-
-  rolledTienThien.forEach(t=>{
-    const div=document.createElement("div");
-    div.innerText =
-      `✨ ${t.name} [${t.grade}]\n${t.desc}`;
-    div.style.cursor="pointer";
-    div.style.marginBottom="6px";
-
-    div.onclick=()=>{
-      if(chosenTT.includes(t)){
-        chosenTT = chosenTT.filter(x=>x!==t);
-        div.style.color="";
-      } else if(chosenTT.length<3){
-        chosenTT.push(t);
-        div.style.color="gold";
-      }
-    };
-    tienThienList.appendChild(div);
-  });
+/* ================= LINH CĂN ================= */
+function rollLinhCan(){
+  const type=rand(LINH_CAN_TYPES);
+  let elements=[];
+  if(type.name==="Ngũ hành linh căn"){
+    elements=["Kim","Mộc","Thủy","Hỏa","Thổ"];
+  }else if(type.special){
+    elements=[rand(ELEMENTS)];
+  }else{
+    let pool=[...ELEMENTS];
+    while(elements.length<type.count){
+      let e=rand(pool);
+      elements.push(e);
+      pool.splice(pool.indexOf(e),1);
+    }
+  }
+  linhCan={type:type.name,elements,speed:type.speed};
+  lingCanEl.innerText=`${type.name}: ${elements.join(", ")}`;
 }
 
-// ===== INIT =====
-add("🌌 Thế giới tu tiên mở ra...");
-rollCharacter();
-
-// ===== CONFIRM =====
-confirmBtn.onclick=()=>{
-  if(!nameInput.value.trim()){
-    alert("Phải nhập tên nhân vật");
-    return;
-  }
-  if(chosenTT.length!==3){
-    alert("Phải chọn đúng 3 tiên thiên");
-    return;
-  }
-
-  createBox.style.display="none";
-  add(`✨ ${nameInput.value} chính thức bước lên con đường tu tiên.`);
-};
-
-// ===== GAMEPLAY =====
-absorbBtn.onclick=()=>{
-  qi += 10;
-  if(qi >= maxQi){
-    qi = maxQi;
+/* ================= AUTO TU LUYỆN ================= */
+function cultivationTick(){
+  if(!linhCan||!congPhap)return;
+  let speed=linhCan.speed*congPhap.mult;
+  tienThien.forEach(t=>{
+    if(TIEN_THIEN_EFFECT[t])speed*=TIEN_THIEN_EFFECT[t];
+  });
+  qi+=speed;
+  if(qi>=maxQi){
+    qi=maxQi;
     breakBtn.style.display="block";
   }
-  qiEl.innerText = qi;
+  qiEl.innerText=qi.toFixed(1);
+}
+
+/* ================= TẠO NHÂN VẬT ================= */
+confirmBtn.onclick=()=>{
+  rollLinhCan();
+  tienThien=[...document.querySelectorAll("#tienThienList div")]
+    .filter(d=>d.style.color==="gold")
+    .map(d=>d.innerText.replace("✨ ",""));
+  let available=CONG_PHAP.filter(c=>
+    c.element==="Hỗn"||linhCan.elements.includes(c.element)
+  );
+  congPhap=rand(available);
+  add(`👤 ${nameInput.value} (${genderSelect.value})`);
+  add(`🌱 ${linhCan.type} – ${linhCan.elements.join(", ")}`);
+  add(`📜 Công pháp: ${congPhap.name}`);
+  add(`⚔️ Võ kỹ: ${VO_KY[linhCan.elements[0]].join(", ")}`);
+  createBox.style.display="none";
 };
 
+/* ================= ĐỘT PHÁ ================= */
 breakBtn.onclick=()=>{
   realm++;
-  qi = 0;
-  maxQi += 50;
-  realmEl.innerText = `Luyện Khí tầng ${realm}`;
-  qiEl.innerText = qi;
-  maxQiEl.innerText = maxQi;
+  qi=0;
+  maxQi+=50;
+  realmEl.innerText=`Luyện Khí tầng ${realm}`;
+  qiEl.innerText=qi;
+  maxQiEl.innerText=maxQi;
   breakBtn.style.display="none";
-  add("⚡ Đột phá thành công!");
+  add("⚡ Đột phá cảnh giới!");
 };
 
+/* ================= CHIẾN ĐẤU ================= */
 fightBtn.onclick=()=>{
-  add("⚔️ Bạn giao chiến với yêu thú...");
+  let enemyHp=100+realm*20;
+  let skill=rand(VO_KY[linhCan.elements[0]]);
+  let dmg=20*congPhap.mult;
+  enemyHp-=dmg;
+  add(`⚔️ Dùng ${skill}, gây ${dmg.toFixed(0)} sát thương`);
+  if(enemyHp<=0)add("🎉 Đánh bại đối thủ!");
 };
 
-// ===== REROLL BUTTON =====
-const rerollBtn = document.createElement("button");
-rerollBtn.innerText = "🎲 Roll lại";
-rerollBtn.style.marginTop = "8px";
-confirmBtn.before(rerollBtn);
-rerollBtn.onclick = rollCharacter;
+/* ================= START ================= */
+setInterval(cultivationTick,1000);
