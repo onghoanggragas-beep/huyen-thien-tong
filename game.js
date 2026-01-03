@@ -1,63 +1,80 @@
-/* ================= ACCOUNT SYSTEM ================= */
+/* ================= BASIC STORAGE ================= */
 
 function getAccounts() {
   return JSON.parse(localStorage.getItem("accounts") || "{}");
 }
 
-function saveAccounts(acc) {
-  localStorage.setItem("accounts", JSON.stringify(acc));
+function saveAccounts(data) {
+  localStorage.setItem("accounts", JSON.stringify(data));
 }
+
+/* ================= LOGIN ================= */
 
 function login() {
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
 
   if (!user || !pass) {
-    alert("Vui lòng nhập tài khoản và mật khẩu");
+    alert("Nhập tài khoản và mật khẩu");
     return;
   }
 
   let accounts = getAccounts();
 
-  // ĐĂNG KÝ
+  // Tạo mới nếu chưa có
   if (!accounts[user]) {
     accounts[user] = {
       password: pass,
       character: null
     };
     saveAccounts(accounts);
-  }
-  // ĐĂNG NHẬP
-  else {
-    if (accounts[user].password !== pass) {
-      alert("Sai mật khẩu");
-      return;
-    }
-  }
-
-  // set user hiện tại
-  localStorage.setItem("currentUser", user);
-
-  // ẨN LOGIN
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("create").classList.add("hidden");
-  document.getElementById("game").classList.add("hidden");
-
-  // CHƯA CÓ NHÂN VẬT → TẠO
-  if (!accounts[user].character) {
-    document.getElementById("create").classList.remove("hidden");
+    console.log("Đăng ký:", user);
+  } 
+  // Đã tồn tại thì kiểm tra pass
+  else if (accounts[user].password !== pass) {
+    alert("Sai mật khẩu");
+    console.log("Sai mật khẩu:", user);
     return;
   }
 
-  // ĐÃ CÓ NHÂN VẬT → VÀO GAME
-  localStorage.setItem(
-    "character",
-    JSON.stringify(accounts[user].character)
-  );
-  startGame();
-    }
+  // Set user hiện tại
+  localStorage.setItem("currentUser", user);
 
-/* ================= CHARACTER STORAGE ================= */
+  // QUY TẮC DUY NHẤT:
+  // Có character -> vào game
+  // Không có -> tạo nhân vật
+  if (accounts[user].character) {
+    localStorage.setItem(
+      "character",
+      JSON.stringify(accounts[user].character)
+    );
+    showGame();
+  } else {
+    showCreate();
+  }
+}
+
+/* ================= SCREEN CONTROL ================= */
+
+function hideAll() {
+  ["login","create","game","battle","inventory"].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
+  });
+}
+
+function showCreate() {
+  hideAll();
+  document.getElementById("create").classList.remove("hidden");
+}
+
+function showGame() {
+  hideAll();
+  document.getElementById("game").classList.remove("hidden");
+  render();
+}
+
+/* ================= CHARACTER ================= */
 
 function loadChar() {
   return JSON.parse(localStorage.getItem("character"));
@@ -66,24 +83,14 @@ function loadChar() {
 function saveChar(char) {
   const user = localStorage.getItem("currentUser");
   let accounts = getAccounts();
+
   accounts[user].character = char;
   saveAccounts(accounts);
+
   localStorage.setItem("character", JSON.stringify(char));
 }
 
-/* ================= GAME CORE ================= */
-
-function startGame() {
-  document.getElementById("create").classList.add("hidden");
-  document.getElementById("game").classList.remove("hidden");
-  render();
-}
-
-function log(msg) {
-  const el = document.getElementById("log");
-  el.innerHTML += `<div>${msg}</div>`;
-  el.scrollTop = el.scrollHeight;
-}
+/* ================= GAME ================= */
 
 function render() {
   const c = loadChar();
