@@ -47,3 +47,37 @@ fightBtn.onclick = async ()=>{
   battleLog.innerText=d.msg;
   updateChar(d);
 };
+const createBox = document.getElementById("createChar");
+const listBox = document.getElementById("tienThienList");
+const confirmBtn = document.getElementById("confirmChar");
+const lingCanEl = document.getElementById("lingCan");
+
+let chosenTT = [];
+
+fetch("/enter").then(r=>r.json()).then(d=>{
+  lingCanEl.innerText = `${d.lingCan.name} linh căn [${d.lingCan.grade}]`;
+  d.roll.forEach(t=>{
+    const div=document.createElement("div");
+    div.innerText = `✨ ${t.name} [${t.grade}]`;
+    div.style.cursor="pointer";
+    div.onclick=()=>{
+      if(chosenTT.includes(t)){
+        chosenTT=chosenTT.filter(x=>x!==t);
+        div.style.color="";
+      } else if(chosenTT.length<3){
+        chosenTT.push(t);
+        div.style.color="gold";
+      }
+    };
+    listBox.appendChild(div);
+  });
+});
+
+confirmBtn.onclick=()=>{
+  if(chosenTT.length!==3){
+    alert("Phải chọn đúng 3 tiên thiên");
+    return;
+  }
+  createBox.style.display="none";
+  add("✨ Nhân vật đã được tạo. Con đường tu tiên bắt đầu!");
+};
