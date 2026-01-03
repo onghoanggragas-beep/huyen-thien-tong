@@ -19,7 +19,39 @@
   <script src="game.js"></script>
 </head>
 <body>
-<div id="app">
+<div id="app"><!-- LOGIN SCREEN --><!-- CREATE CHARACTER -->
+<div id="createCharScreen" class="overlay" style="display:none">
+  <div class="card">
+    <h2>🎲 Tạo Nhân Vật</h2>
+
+    <input id="charNameInput" placeholder="Tên nhân vật">
+
+    <select id="charGenderInput">
+      <option value="male">Nam</option>
+      <option value="female">Nữ</option>
+    </select>
+
+    <h3>🌱 Linh căn</h3>
+    <div id="rollLinhCan"></div>
+
+    <h3>✨ Tiên thiên (chọn 3)</h3>
+    <div id="rollTienThien"></div>
+
+    <button class="main-btn" onclick="rerollCharacter()">🎲 Roll lại</button>
+    <button onclick="confirmCreate()">✅ Xác nhận</button>
+  </div>
+</div>
+<div id="loginScreen" class="overlay">
+  <div class="card center">
+    <h2>🔐 Đăng nhập</h2>
+
+    <input id="username" placeholder="Tên tài khoản">
+    <input id="password" type="password" placeholder="Mật khẩu">
+
+    <button class="main-btn" onclick="login()">Đăng nhập</button>
+    <button onclick="showRegister()">Tạo tài khoản</button>
+  </div>
+</div>
 
   <!-- TOP BAR -->
   <div class="topbar">
