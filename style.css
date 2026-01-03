@@ -182,3 +182,8 @@ input, select {
   color: #020617;
   font-weight: bold;
   }
+canvas { image-rendering: pixelated; }
+.hpbar {
+  height: 6px;
+  background: #22c55e;
+  }
