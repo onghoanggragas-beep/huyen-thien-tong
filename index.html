@@ -18,94 +18,100 @@
   <script src="map.js"></script>
   <script src="game.js"></script>
 </head>
-
 <body>
-
 <div id="app">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="title">🌌 TU TIÊN RPG</div>
-    <div class="stage" id="charStage">Cảnh giới</div>
-  </header>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">🌌 TU TIÊN RPG</div>
+    <div class="stage" id="charStage">Luyện Khí</div>
+  </div>
 
-  <!-- CHARACTER PANEL -->
-  <section class="panel character">
-    <h2>👤 Nhân Vật</h2>
-    <div class="row">Tên: <span id="charName"></span> (<span id="charGender"></span>)</div>
-    <div class="row" id="charHp">HP</div>
-    <div class="row" id="charExp">Linh khí</div>
-    <div class="row">ATK: <span id="charAtk"></span> | DEF: <span id="charDef"></span></div>
-
-    <div class="sub">
-      <h3>🌱 Linh căn</h3>
-      <div id="linhCan" class="tag-box"></div>
+  <!-- CHARACTER CARD -->
+  <div class="card character-card">
+    <div class="char-header">
+      <img src="assets/player.png" class="avatar">
+      <div>
+        <div class="char-name" id="charName">Chưa tạo</div>
+        <div class="char-gender" id="charGender"></div>
+      </div>
     </div>
 
-    <div class="sub">
-      <h3>✨ Tiên thiên</h3>
-      <div id="tienThien" class="tag-box"></div>
+    <div class="stat">
+      <label>HP</label>
+      <div class="bar"><div id="hpBar"></div></div>
     </div>
 
-    <div class="sub">
-      <h3>📜 Công pháp</h3>
-      <div id="congPhap"></div>
+    <div class="stat">
+      <label>Linh khí</label>
+      <div class="bar"><div id="expBar"></div></div>
     </div>
-  </section>
+
+    <div class="stat-line">
+      <span id="charAtk">ATK</span>
+      <span id="charDef">DEF</span>
+    </div>
+  </div>
+
+  <!-- LINH CAN -->
+  <div class="card">
+    <h3>🌱 Linh căn</h3>
+    <div class="tag-box" id="linhCan"></div>
+  </div>
+
+  <!-- TIEN THIEN -->
+  <div class="card">
+    <h3>✨ Tiên thiên</h3>
+    <div class="tag-box" id="tienThien"></div>
+  </div>
+
+  <!-- CONG PHAP -->
+  <div class="card">
+    <h3>📜 Công pháp</h3>
+    <div id="congPhap">Chưa tu luyện</div>
+  </div>
 
   <!-- CULTIVATION -->
-  <section class="panel cultivation">
-    <h2>🧘 Tu Luyện</h2>
-    <div class="btn-row">
-      <button onclick="startCultivation()">Bắt đầu</button>
-      <button onclick="stopCultivation()">Dừng</button>
-      <button id="breakBtn" onclick="breakthrough()" style="display:none">Đột Phá</button>
-    </div>
-  </section>
+  <div class="card center">
+    <button class="main-btn" onclick="startCultivation()">🧘 Tu luyện</button>
+    <button class="break-btn" id="breakBtn" onclick="breakthrough()">💥 Đột phá</button>
+  </div>
 
   <!-- MAP -->
-  <section class="panel map">
-    <h2>🗺️ Bản Đồ</h2>
-    <div id="mapName"></div>
-    <div id="mapDesc" class="desc"></div>
-
-    <div class="btn-row">
+  <div class="card">
+    <h3>🗺️ Bản đồ</h3>
+    <div class="map-btns">
       <button onclick="enterMap('linh_son')">Linh Sơn</button>
       <button onclick="enterMap('hoa_vuc')">Hỏa Vực</button>
       <button onclick="enterMap('bang_nguyen')">Băng Nguyên</button>
     </div>
-
-    <div class="btn-row">
-      <button onclick="exploreMap('linh_son')">Thăm dò</button>
-    </div>
-  </section>
+    <button class="full-btn" onclick="exploreMap('linh_son')">🔍 Thăm dò</button>
+  </div>
 
   <!-- BATTLE -->
-  <section class="panel battle" id="battle">
-    <h2>⚔️ Chiến Đấu</h2>
-    <div>Địch: <span id="enemyName"></span></div>
+  <div class="card battle-card" id="battle">
+    <h3>⚔️ Chiến đấu</h3>
+    <div id="enemyName"></div>
     <div id="enemyHp"></div>
-
     <div class="skill-bar">
       <button onclick="useSkill('kim_kiem_tram')">Kim Kiếm</button>
       <button onclick="useSkill('hoa_cau_thuat')">Hỏa Cầu</button>
       <button onclick="useSkill('thien_loi_giang')">Thiên Lôi</button>
     </div>
-  </section>
+  </div>
 
   <!-- INVENTORY -->
-  <section class="panel inventory">
-    <h2>🎒 Kho Đồ</h2>
-    <div id="inventory" class="inventory-box"></div>
-  </section>
+  <div class="card">
+    <h3>🎒 Kho đồ</h3>
+    <div id="inventory" class="inventory-grid"></div>
+  </div>
 
   <!-- LOG -->
-  <section class="panel log">
-    <h2>📜 Nhật Ký</h2>
+  <div class="card log-card">
+    <h3>📜 Nhật ký</h3>
     <div id="log"></div>
-  </section>
+  </div>
 
 </div>
-
-</body>
+        </body>
 </html>
