@@ -1,139 +1,111 @@
+// ===== DOM =====
 const log = document.getElementById("log");
-const input = document.getElementById("input");
-const send = document.getElementById("send");
-const cultivateBtn = document.getElementById("cultivateBtn");
+const absorbBtn = document.getElementById("absorbBtn");
+const breakBtn = document.getElementById("breakBtn");
 const fightBtn = document.getElementById("fightBtn");
-const battle = document.getElementById("battle");
-const battleLog = document.getElementById("battleLog");
 
-let playerId = "p_" + Math.random().toString(36).slice(2);
+const realmEl = document.getElementById("realm");
+const qiEl = document.getElementById("qi");
+const maxQiEl = document.getElementById("maxQi");
+const hpEl = document.getElementById("hp");
 
-function addMsg(text, cls) {
-  const d = document.createElement("div");
-  d.className = cls;
-  d.innerText = text;
-  log.appendChild(d);
-  log.scrollTop = log.scrollHeight;
-}
-
-function updateChar(d) {
-  if (d.realm) realm.innerText = d.realm;
-  if (d.exp !== undefined) exp.innerText = d.exp;
-  if (d.hp !== undefined) hp.innerText = d.hp;
-}
-
-fetch("/enter").then(r=>r.json()).then(d=>addMsg(d.intro,"npc"));
-
-send.onclick = async ()=>{
-  if(!input.value) return;
-  addMsg(input.value,"player");
-  const r=await fetch("/talk",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({message:input.value})});
-  const d=await r.json();
-  addMsg(d.reply,"npc");
-  input.value="";
-};
-
-cultivateBtn.onclick = async ()=>{
-  const r=await fetch("/cultivate",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({playerId})});
-  const d=await r.json();
-  addMsg(d.msg,"npc");
-  updateChar(d);
-};
-
-fightBtn.onclick = async ()=>{
-  battle.style.display="block";
-  const r=await fetch("/fight",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({playerId})});
-  const d=await r.json();
-  battleLog.innerText=d.msg;
-  updateChar(d);
-};
+// Create character
 const createBox = document.getElementById("createChar");
-const listBox = document.getElementById("tienThienList");
 const confirmBtn = document.getElementById("confirmChar");
+const nameInput = document.getElementById("charName");
+const genderSelect = document.getElementById("charGender");
 const lingCanEl = document.getElementById("lingCan");
+const tienThienList = document.getElementById("tienThienList");
 
+// ===== DATA =====
+const LINH_CAN = ["Kim", "Mộc", "Thủy", "Hỏa", "Thổ", "Phong", "Lôi", "Băng"];
+const GRADES = ["Hạ", "Trung", "Thượng", "Cực", "Tiên"];
+
+const TIEN_THIEN = [
+  "Thiên Mệnh Chi Tử","Ngộ Tính Tuyệt Luân","Đệ Tử Thế Gia","Khí Vận Gia Thân","Người Xuyên Không",
+  "Thần Hồn Cường Đại","Chiến Đấu Cuồng Nhân","Tiên Thiên Đạo Thể","Hỗn Độn Linh Thể","Bất Diệt Thể Phách",
+  "Ý Chí Bất Khuất","Cơ Duyên Liên Miên","Huyết Chiến Thể","Sát Phạt Quyết Đoán","Thiên Phú Dị Biến"
+];
+
+// ===== STATE =====
+let qi = 0;
+let maxQi = 100;
+let realm = 1;
+let hp = 100;
 let chosenTT = [];
 
-fetch("/enter").then(r=>r.json()).then(d=>{
-  lingCanEl.innerText = `${d.lingCan.name} linh căn [${d.lingCan.grade}]`;
-  d.roll.forEach(t=>{
-    const div=document.createElement("div");
-    div.innerText = `✨ ${t.name} [${t.grade}]`;
-    div.style.cursor="pointer";
-    div.onclick=()=>{
-      if(chosenTT.includes(t)){
-        chosenTT=chosenTT.filter(x=>x!==t);
-        div.style.color="";
-      } else if(chosenTT.length<3){
-        chosenTT.push(t);
-        div.style.color="gold";
-      }
-    };
-    listBox.appendChild(div);
-  });
+// ===== UTILS =====
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function add(text, cls="npc"){
+  const div=document.createElement("div");
+  div.className=cls;
+  div.innerText=text;
+  log.appendChild(div);
+  log.scrollTop=log.scrollHeight;
+}
+
+// ===== INIT =====
+add("🌌 Thế giới tu tiên mở ra...");
+
+// Roll linh căn
+const rolledLingCan = `${rand(LINH_CAN)} linh căn [${rand(GRADES)}]`;
+lingCanEl.innerText = rolledLingCan;
+
+// Roll tiên thiên
+const rolledTT = [...TIEN_THIEN].sort(()=>0.5-Math.random()).slice(0,5);
+rolledTT.forEach(t=>{
+  const div=document.createElement("div");
+  div.innerText=`✨ ${t}`;
+  div.style.cursor="pointer";
+  div.onclick=()=>{
+    if(chosenTT.includes(t)){
+      chosenTT=chosenTT.filter(x=>x!==t);
+      div.style.color="";
+    } else if(chosenTT.length<3){
+      chosenTT.push(t);
+      div.style.color="gold";
+    }
+  };
+  tienThienList.appendChild(div);
 });
 
+// ===== CONFIRM CHARACTER =====
 confirmBtn.onclick=()=>{
+  if(!nameInput.value.trim()){
+    alert("Phải nhập tên nhân vật");
+    return;
+  }
   if(chosenTT.length!==3){
     alert("Phải chọn đúng 3 tiên thiên");
     return;
   }
+
   createBox.style.display="none";
-  add("✨ Nhân vật đã được tạo. Con đường tu tiên bắt đầu!");
+  add(`✨ ${nameInput.value} bước lên con đường tu tiên.`);
 };
-const createBox = document.getElementById("createChar");
-const listBox = document.getElementById("tienThienList");
-const confirmBtn = document.getElementById("confirmChar");
-const lingCanEl = document.getElementById("lingCan");
 
-const nameInput = document.getElementById("charName");
-const genderSelect = document.getElementById("charGender");
-
-let chosenTT = [];
-let character = {};
-
-fetch("/enter").then(r=>r.json()).then(d=>{
-  lingCanEl.innerText = `${d.lingCan.name} linh căn [${d.lingCan.grade}]`;
-
-  d.roll.forEach(t=>{
-    const div = document.createElement("div");
-    div.innerText = `✨ ${t.name} [${t.grade}]`;
-    div.style.cursor = "pointer";
-    div.onclick = () => {
-      if (chosenTT.includes(t)) {
-        chosenTT = chosenTT.filter(x => x !== t);
-        div.style.color = "";
-      } else if (chosenTT.length < 3) {
-        chosenTT.push(t);
-        div.style.color = "gold";
-      }
-    };
-    listBox.appendChild(div);
-  });
-});
-
-confirmBtn.onclick = () => {
-  const name = nameInput.value.trim();
-  const gender = genderSelect.value;
-
-  if (!name) {
-    alert("Phải nhập tên nhân vật");
-    return;
+// ===== GAMEPLAY =====
+absorbBtn.onclick=()=>{
+  qi+=10;
+  if(qi>=maxQi){
+    qi=maxQi;
+    breakBtn.style.display="block";
   }
+  qiEl.innerText=qi;
+};
 
-  if (chosenTT.length !== 3) {
-    alert("Phải chọn đúng 3 tiên thiên");
-    return;
-  }
+breakBtn.onclick=()=>{
+  realm++;
+  qi=0;
+  maxQi+=50;
+  realmEl.innerText=`Luyện Khí tầng ${realm}`;
+  qiEl.innerText=qi;
+  maxQiEl.innerText=maxQi;
+  breakBtn.style.display="none";
+  add("⚡ Đột phá thành công!");
+};
 
-  character = {
-    name,
-    gender,
-    lingCan: lingCanEl.innerText,
-    tienThien: chosenTT
-  };
-
-  createBox.style.display = "none";
-
-  add(`✨ ${character.name} (${character.gender}) bước vào con đường tu tiên.`);
+fightBtn.onclick=()=>{
+  add("⚔️ Bạn giao chiến với yêu thú...");
 };
