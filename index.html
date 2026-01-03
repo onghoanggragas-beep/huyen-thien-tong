@@ -1,114 +1,44 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Huyền Thiên Tông</title>
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0b0f14;
-      color: #eaeaea;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      padding: 12px;
-      background: linear-gradient(90deg, #1e2a3a, #0b0f14);
-      text-align: center;
-      font-weight: bold;
-      font-size: 18px;
-      border-bottom: 1px solid #222;
-    }
-
-    #log {
-      flex: 1;
-      padding: 12px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .npc {
-      align-self: flex-start;
-      background: #1c2430;
-      padding: 10px 14px;
-      border-radius: 12px;
-      max-width: 85%;
-      font-size: 15px;
-      line-height: 1.4;
-    }
-
-    .player {
-      align-self: flex-end;
-      background: #2e7df6;
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 12px;
-      max-width: 85%;
-      font-size: 15px;
-    }
-
-    footer {
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      border-top: 1px solid #222;
-      background: #0f141c;
-    }
-
-    #input {
-      flex: 1;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: none;
-      outline: none;
-      font-size: 15px;
-      background: #1c2430;
-      color: #fff;
-    }
-
-    #send {
-      padding: 0 16px;
-      border-radius: 10px;
-      border: none;
-      background: #2e7df6;
-      color: white;
-      font-weight: bold;
-      font-size: 15px;
-    }
-
-    #send:active {
-      transform: scale(0.97);
-    }
-  </style>#character {
-  background: #121826;
-  padding: 10px;
-  border-bottom: 1px solid #222;
-  font-size: 14px;
-}
+<meta charset="UTF-8" />
+<title>Huyền Thiên Tông</title>
+<style>
+body { margin:0; background:#0b0f14; color:#eee; font-family:sans-serif; }
+header { padding:10px; text-align:center; background:#111; }
+#character, #inventory { padding:10px; background:#141a22; border-bottom:1px solid #222; }
+#log { height:40vh; overflow-y:auto; padding:10px; }
+.player { color:#7dd3fc; margin:5px 0; }
+.npc { color:#facc15; margin:5px 0; }
+footer { display:flex; gap:5px; padding:10px; background:#111; }
+button { padding:8px; background:#2563eb; color:white; border:none; border-radius:4px; }
+#battle { display:none; padding:10px; background:#1a0f0f; }
+</style>
 </head>
-
 <body>
 
-  <header>
-    🏯 HUYỀN THIÊN TÔNG
-  </header>
+<header><h2>🏯 HUYỀN THIÊN TÔNG</h2></header>
+
 <div id="character">
-  <h3>🧍 Nhân vật</h3>
   <div>Cảnh giới: <span id="realm">Luyện Khí tầng 1</span></div>
   <div>Tu vi: <span id="exp">0</span>/100</div>
   <div>HP: <span id="hp">100</span></div>
 </div>
-  <div id="log"></div>
+
+<div id="inventory">
+  🎒 Balo: 💊 Tụ linh đan ×1
+</div>
+
+<div id="log"></div>
+
+<div id="battle">
+  <h3>⚔️ Chiến đấu</h3>
+  <img src="https://i.imgur.com/4AiXzf8.png" width="120"/>
+  <div id="battleLog"></div>
+</div>
+
 <footer>
-  <input id="input" placeholder="Nhập lời nói... (vd: bái kiến tông chủ)" />
+  <input id="input" placeholder="Nhập lời nói..." style="flex:1"/>
   <button id="send">Gửi</button>
 </footer>
 
@@ -116,6 +46,7 @@
   <button id="cultivateBtn">🧘 Tu luyện</button>
   <button id="fightBtn">⚔️ Chiến đấu</button>
 </div>
-  <script src="chat.js"></script>
+
+<script src="chat.js"></script>
 </body>
 </html>
