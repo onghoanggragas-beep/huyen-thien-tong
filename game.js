@@ -22,6 +22,11 @@ function log(message) {
 /* =========================
    CORE UI UPDATE
 ========================= */
+document.getElementById("hpBar").style.width =
+  (char.hp / char.maxHp * 100) + "%";
+
+document.getElementById("expBar").style.width =
+  (char.exp / char.expMax * 100) + "%";
 function updateUI(char) {
   if (!char) return;
 
