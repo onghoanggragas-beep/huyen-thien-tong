@@ -32,5 +32,5 @@ qi:0,
 cultivating:false,
 last:Date.now()
 saveChar(char);
-startGame();
+showGame();
 }
