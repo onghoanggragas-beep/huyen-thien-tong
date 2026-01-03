@@ -31,7 +31,6 @@ realm:0,stage:1,
 qi:0,
 cultivating:false,
 last:Date.now()
-};
-localStorage.setItem("character",JSON.stringify(char));
+saveChar(char);
 startGame();
 }
