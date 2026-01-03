@@ -1,60 +1,52 @@
-/* ================= BASIC STORAGE ================= */
+/* ========== RESET & STORAGE ========== */
 
-function getAccounts() {
-  return JSON.parse(localStorage.getItem("accounts") || "{}");
+function resetAll() {
+  localStorage.clear();
+  location.reload();
 }
 
-function saveAccounts(data) {
-  localStorage.setItem("accounts", JSON.stringify(data));
+function getAccount(user) {
+  return JSON.parse(localStorage.getItem("acc_" + user));
 }
 
-/* ================= LOGIN ================= */
+function saveAccount(user, data) {
+  localStorage.setItem("acc_" + user, JSON.stringify(data));
+}
+
+/* ========== LOGIN (KHÔNG THỂ FAIL) ========== */
 
 function login() {
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
 
-  if (!user || !pass) {
-    alert("Nhập tài khoản và mật khẩu");
+  if (!user) {
+    alert("Nhập tài khoản");
     return;
   }
 
-  let accounts = getAccounts();
+  let acc = getAccount(user);
 
-  // Tạo mới nếu chưa có
-  if (!accounts[user]) {
-    accounts[user] = {
-      password: pass,
+  // Nếu chưa tồn tại → tạo mới
+  if (!acc) {
+    acc = {
+      password: pass || "",
       character: null
     };
-    saveAccounts(accounts);
-    console.log("Đăng ký:", user);
-  } 
-  // Đã tồn tại thì kiểm tra pass
-  else if (accounts[user].password !== pass) {
-    alert("Sai mật khẩu");
-    console.log("Sai mật khẩu:", user);
-    return;
+    saveAccount(user, acc);
   }
 
-  // Set user hiện tại
+  // Nếu tồn tại nhưng pass khác → cho vào luôn (DEV MODE)
   localStorage.setItem("currentUser", user);
 
-  // QUY TẮC DUY NHẤT:
-  // Có character -> vào game
-  // Không có -> tạo nhân vật
-  if (accounts[user].character) {
-    localStorage.setItem(
-      "character",
-      JSON.stringify(accounts[user].character)
-    );
+  if (acc.character) {
+    localStorage.setItem("character", JSON.stringify(acc.character));
     showGame();
   } else {
     showCreate();
   }
 }
 
-/* ================= SCREEN CONTROL ================= */
+/* ========== SCREEN ========== */
 
 function hideAll() {
   ["login","create","game","battle","inventory"].forEach(id=>{
@@ -74,7 +66,7 @@ function showGame() {
   render();
 }
 
-/* ================= CHARACTER ================= */
+/* ========== CHARACTER ========== */
 
 function loadChar() {
   return JSON.parse(localStorage.getItem("character"));
@@ -82,15 +74,13 @@ function loadChar() {
 
 function saveChar(char) {
   const user = localStorage.getItem("currentUser");
-  let accounts = getAccounts();
-
-  accounts[user].character = char;
-  saveAccounts(accounts);
-
+  const acc = getAccount(user);
+  acc.character = char;
+  saveAccount(user, acc);
   localStorage.setItem("character", JSON.stringify(char));
 }
 
-/* ================= GAME ================= */
+/* ========== GAME ========== */
 
 function render() {
   const c = loadChar();
@@ -111,11 +101,11 @@ function render() {
     `Trạng thái: ${c.cultivating ? "Đang tu luyện" : "Dừng"}`;
 }
 
-/* ================= LOOP ================= */
+/* ========== LOOP ========== */
 
-setInterval(() => {
+setInterval(()=>{
   if (typeof updateCultivation === "function") {
     updateCultivation();
     render();
   }
-}, 1000);
+},1000);
