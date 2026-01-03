@@ -1,180 +1,44 @@
-/* ================= RESET & BASE ================= */
-
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  overflow-x: hidden;
-}
-
-/* ================= BACKGROUND (KHÔNG CHẶN CLICK) ================= */
-
 body {
-  background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+  margin: 0;
+  font-family: system-ui;
+  background: linear-gradient(#0f2027,#203a43,#2c5364);
+  color: #fff;
 }
-
-/* TUYỆT ĐỐI KHÔNG DÙNG ::before / ::after PHỦ NỀN */
-
-/* ================= APP WRAPPER ================= */
 
 #app {
-  position: relative;
-  z-index: 1;
   max-width: 420px;
-  margin: 0 auto;
-  padding: 16px;
+  margin: auto;
+  padding: 12px;
 }
 
-/* ================= SCREEN ================= */
+.screen { min-height: 100vh; }
+.hidden { display: none; }
 
-.screen {
-  width: 100%;
-  min-height: 100vh;
-  text-align: center;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* ================= INPUT ================= */
-
-input {
+input, button {
   width: 100%;
   padding: 12px;
-  margin: 8px 0;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-}
-
-/* ================= BUTTON ================= */
-
-button {
-  width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  font-size: 16px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #ffd36b, #ffb84d);
-  color: #000;
-  font-weight: 600;
-  cursor: pointer;
-
-  position: relative;
-  z-index: 10;
-
-  pointer-events: auto;
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-/* ================= GENDER ================= */
-
-.gender {
-  display: flex;
-  gap: 10px;
-}
-
-.gender button {
-  width: 100%;
-}
-
-/* ================= PANEL ================= */
-
-.panel {
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 16px;
-  padding: 14px;
-  margin: 14px 0;
-  color: #fff;
-
-  position: relative;
-  z-index: 5;
-}
-
-/* ================= LOG ================= */
-
-.log {
-  height: 160px;
-  overflow-y: auto;
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 12px;
-  padding: 10px;
-  font-size: 13px;
-  text-align: left;
-}
-
-/* ================= BATTLE ================= */
-
-.battle-field {
-  display: flex;
-  justify-content: space-between;
-  margin: 16px 0;
-}
-
-.unit {
-  width: 45%;
-}
-
-.sprite {
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 6px;
-  background-size: cover;
-  background-position: center;
-}
-
-.player {
-  background-image: url("https://i.imgur.com/9Xn3K6F.png");
-}
-
-.monster {
-  background-image: url("https://i.imgur.com/2R8FQ7Z.png");
-}
-
-/* ================= INVENTORY ================= */
-
-.item {
-  padding: 8px;
   margin: 6px 0;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
+  border: none;
 }
 
-/* ================= MAP BUTTON ================= */
-
-.panel h3 {
-  margin-top: 0;
-  color: #ffd36b;
+button {
+  background: #ffd36b;
+  color: #000;
+  font-weight: bold;
 }
 
-/* ================= HARD FIX MOBILE CLICK ================= */
-
-/* CHẶN MỌI OVERLAY KHÔNG NHẬN CLICK */
-body * {
-  pointer-events: auto;
+.panel {
+  background: rgba(0,0,0,.45);
+  padding: 10px;
+  border-radius: 12px;
+  margin: 10px 0;
 }
 
-/* ĐẢM BẢO KHÔNG CÓ LAYER ẨN PHỦ */
-body::before,
-body::after {
-  content: none !important;
-}
+.gender { display:flex; gap:6px; }
 
-/* SAFETY: NẾU BROWSER BUG */
-button,
-input {
-  touch-action: manipulation;
+.log {
+  height: 140px;
+  overflow-y: auto;
+  font-size: 13px;
 }
