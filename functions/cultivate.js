@@ -1,43 +1,23 @@
 let players = globalThis.players || (globalThis.players = {});
 
 export async function onRequest({ request }) {
-  const body = await request.json().catch(() => ({}));
-  const id = body.playerId || "guest";
-
-  if (!players[id]) {
-    players[id] = {
-      realm: "Luyện Khí tầng 1",
-      exp: 0,
-      hp: 100
-    };
+  const { playerId } = await request.json();
+  if (!players[playerId]) {
+    players[playerId] = { realm: "Luyện Khí tầng 1", exp: 0, hp: 100 };
   }
+  const p = players[playerId];
 
-  const p = players[id];
-
-  // 10% tẩu hỏa
   if (Math.random() < 0.1) {
-    p.hp -= 30;
-    return new Response(JSON.stringify({
-      type: "fail",
-      msg: "Tẩu hỏa nhập ma! HP giảm mạnh.",
-      hp: p.hp
-    }), { headers: { "Content-Type": "application/json" }});
+    p.hp -= 20;
+    return Response.json({ msg: "⚠️ Tẩu hỏa nhập ma!", hp: p.hp });
   }
 
-  p.exp += 10;
-
+  p.exp += 20;
   if (p.exp >= 100) {
     p.exp = 0;
     p.realm = "Luyện Khí tầng 2";
-    return new Response(JSON.stringify({
-      type: "breakthrough",
-      msg: "Đột phá cảnh giới! Luyện Khí tầng 2."
-    }), { headers: { "Content-Type": "application/json" }});
+    return Response.json({ msg: "✨ Đột phá Luyện Khí tầng 2!", realm: p.realm, exp: p.exp });
   }
 
-  return new Response(JSON.stringify({
-    type: "success",
-    msg: "Tu luyện thành công, linh lực tăng.",
-    exp: p.exp
-  }), { headers: { "Content-Type": "application/json" }});
+  return Response.json({ msg: "🧘 Tu luyện thành công", exp: p.exp });
 }
