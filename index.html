@@ -33,7 +33,27 @@
     <button onclick="rollCharacter()">🎲 Roll</button>
     <button onclick="confirmCharacter()">Xác nhận</button>
   </section>
+<!-- BATTLE SCREEN -->
+<section id="battle" class="screen hidden">
+  <h2>⚔️ Chiến Đấu</h2>
 
+  <div class="battle-field">
+    <div class="unit">
+      <div id="playerSprite" class="sprite player"></div>
+      <p id="playerHP"></p>
+    </div>
+
+    <div class="unit">
+      <div id="monsterSprite" class="sprite monster"></div>
+      <p id="monsterHP"></p>
+    </div>
+  </div>
+
+  <div id="skillBar"></div>
+
+  <button onclick="endBattle()">🏃 Rút lui</button>
+  <div id="battleLog" class="log"></div>
+</section>
   <!-- GAME -->
   <section id="game-screen" class="screen hidden">
     <h2 id="charInfo"></h2>
@@ -50,7 +70,8 @@
   </section>
 
 </div>
-
+<script src="map.js"></script>
+<script src="battle.js"></script>
 <script src="data.js"></script>
 <script src="character.js"></script>
 <script src="cultivation.js"></script>
