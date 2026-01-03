@@ -1,25 +1,34 @@
 let battleState=null;
+let currentMapId = 1;
+let currentFloor = 1;
 
-function startBattle(mapId=1){
-  const char=loadChar();
-  const monster=randomMonster(mapId);
+function startBattle(mapId = currentMapId) {
+  currentMapId = mapId;
 
-  battleState={
-    player:{
-      hp:100+char.realm*50,
-      atk:10+char.realm*5,
-      skills:SKILLS.filter(s=>char.root.elements.includes(s.element))
+  const char = loadChar();
+  const monster = getMonster(mapId, currentFloor);
+  if (!monster) return;
+
+  battleState = {
+    mapId,
+    floor: currentFloor,
+    player: {
+      hp: 100 + char.realmIndex * 50,
+      atk: 10 + char.realmIndex * 5,
+      skills: SKILLS.filter(s =>
+        char.root.elements.includes(s.element)
+      )
     },
-    monster:{
-      name:monster.name,
-      hp:monster.hp,
-      atk:monster.atk,
-      element:monster.element
+    monster: {
+      name: monster.name,
+      hp: monster.hp,
+      atk: monster.atk
     }
   };
 
   showBattle();
   renderBattle();
+    }
 }
 
 function showBattle(){
@@ -84,9 +93,22 @@ function logBattle(msg){
   l.innerHTML+=`<div>${msg}</div>`;
   l.scrollTop=l.scrollHeight;
 }
-
-function winBattle(){
+function winBattle() {
   logBattle("🏆 Chiến thắng!");
+
+  // Tăng tầng
+  currentFloor++;
+
+  // Drop đồ
+  if (Math.random() < 0.6) {
+    addItem(randomEquipment());
+  }
+
+  setTimeout(() => {
+    endBattle();
+  }, 800);
+}
+
 }
 
 function loseBattle(){
