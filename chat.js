@@ -109,3 +109,27 @@ input.addEventListener("keydown", e => {
 
 // Bắt đầu game
 enterGame();
+
+const cultivateBtn = document.getElementById("cultivateBtn");
+const fightBtn = document.getElementById("fightBtn");
+let playerId = "player_" + Math.random().toString(36).slice(2);
+
+cultivateBtn.onclick = async () => {
+  const res = await fetch("/cultivate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ playerId })
+  });
+  const data = await res.json();
+  addMsg(data.msg, "npc");
+};
+
+fightBtn.onclick = async () => {
+  const res = await fetch("/fight", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ playerId })
+  });
+  const data = await res.json();
+  addMsg(data.msg, "npc");
+};
