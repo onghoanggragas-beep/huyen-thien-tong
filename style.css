@@ -102,3 +102,22 @@ button {
   width: 90%;
   margin: 4px 0;
     }
+/* ===== FIX CLICK MOBILE ===== */
+
+/* Cho phép click xuyên qua nền */
+body::before,
+body::after {
+  pointer-events: none;
+}
+
+/* Đảm bảo app nhận click */
+#app {
+  position: relative;
+  z-index: 10;
+}
+
+/* Các nút luôn nhận click */
+button {
+  position: relative;
+  z-index: 20;
+  }
