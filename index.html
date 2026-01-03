@@ -238,7 +238,84 @@ function boot() {
 }
 
 window.addEventListener("load", boot);
-</script>
+</script>let enemy = null;
+let inCombat = false;
+
+function openCombat() {
+  const cs = document.getElementById("combatScreen");
+  if (!cs) {
+    alert("❌ Không tìm thấy combatScreen");
+    return;
+  }
+  cs.style.display = "flex";
+  startCombat();
+}
+
+function startCombat() {
+  inCombat = true;
+  enemy = {
+    name: "Yêu thú",
+    hp: 50,
+    atk: 8
+  };
+  log(`⚔️ Gặp ${enemy.name} (HP ${enemy.hp})`);
+  drawCombat();
+}
+
+function playerAttack() {
+  if (!inCombat || !enemy) return;
+
+  let dmg = 10 + Math.floor(Math.random() * 5);
+  enemy.hp -= dmg;
+  log(`🗡️ Bạn đánh ${enemy.name} gây ${dmg} sát thương`);
+
+  if (enemy.hp <= 0) {
+    log(`🎉 ${enemy.name} bị tiêu diệt!`);
+    endCombat();
+    return;
+  }
+
+  setTimeout(enemyAttack, 600);
+  drawCombat();
+}
+
+function enemyAttack() {
+  let dmg = enemy.atk;
+  player.hp -= dmg;
+  log(`💥 ${enemy.name} đánh bạn gây ${dmg} sát thương`);
+
+  if (player.hp <= 0) {
+    log("☠️ Bạn bị đánh bại!");
+    endCombat();
+  }
+
+  render();
+}
+
+function endCombat() {
+  inCombat = false;
+  enemy = null;
+  document.getElementById("combatScreen").style.display = "none";
+  log("🏃 Rời khỏi chiến đấu");
+}
+
+function drawCombat() {
+  const canvas = document.getElementById("combatCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Player
+  ctx.fillStyle = "cyan";
+  ctx.fillRect(30, 80, 30, 30);
+  ctx.fillText("Bạn", 30, 70);
+
+  // Enemy
+  ctx.fillStyle = "red";
+  ctx.fillRect(240, 80, 30, 30);
+  ctx.fillText(enemy.name, 220, 70);
+}
 
 </body>
 </html>
