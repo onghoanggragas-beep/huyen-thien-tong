@@ -1,72 +1,105 @@
-document.addEventListener("DOMContentLoaded", () => {
-
-  const loginBtn = document.getElementById("loginBtn");
-  const rollBtn = document.getElementById("rollBtn");
-  const confirmBtn = document.getElementById("confirmBtn");
-  const cultivateBtn = document.getElementById("cultivateBtn");
-  const breakBtn = document.getElementById("breakBtn");
-  const inventoryBtn = document.getElementById("inventoryBtn");
-  const backGameBtn = document.getElementById("backGameBtn");
-
-  if (loginBtn) loginBtn.onclick = login;
-  if (rollBtn) rollBtn.onclick = rollCharacter;
-  if (confirmBtn) confirmBtn.onclick = confirmCharacter;
-  if (cultivateBtn) cultivateBtn.onclick = toggleCultivation;
-  if (breakBtn) breakBtn.onclick = breakThrough;
-  if (inventoryBtn) inventoryBtn.onclick = openInventory;
-  if (backGameBtn) backGameBtn.onclick = showGame;
-
-  document.querySelectorAll("[data-gender]").forEach(btn => {
-    btn.onclick = () => selectGender(btn.dataset.gender);
-  });
-
-  document.querySelectorAll("[data-map]").forEach(btn => {
-    btn.onclick = () => goMap(btn.dataset.map);
-  });
-
-});
+/* ================== CORE ================== */
 
 function hideAllScreens() {
-  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+  document.querySelectorAll(".screen").forEach(s =>
+    s.classList.add("hidden")
+  );
 }
 
-function showGame() {
+function showLogin() {
   hideAllScreens();
-  const g = document.getElementById("game-screen");
-  if (g) g.classList.remove("hidden");
-  renderCharacterInfo();
+  document.getElementById("login-screen").classList.remove("hidden");
 }
 
 function showCreate() {
   hideAllScreens();
-  const c = document.getElementById("create-screen");
-  if (c) c.classList.remove("hidden");
+  document.getElementById("create-screen").classList.remove("hidden");
 }
 
-function loadChar() {
-  const c = localStorage.getItem("character");
-  return c ? JSON.parse(c) : null;
+function showGame() {
+  hideAllScreens();
+  document.getElementById("game-screen").classList.remove("hidden");
+  renderCharacterInfo();
 }
 
-function saveChar(c) {
-  localStorage.setItem("character", JSON.stringify(c));
-}
+/* ================== LOGIN ================== */
 
-function renderCharacterInfo() {
-  const el = document.getElementById("characterInfo");
-  if (!el) return;
+function login() {
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value.trim();
 
-  const c = loadChar();
-  if (!c) {
-    el.innerHTML = "Chưa có nhân vật";
+  if (!u || !p) {
+    alert("Nhập tài khoản và mật khẩu");
     return;
   }
 
-  el.innerHTML = `
-    <div><b>${c.name}</b> (${c.gender})</div>
-    <div>Tu vi: ${REALMS[c.realmIndex].name} - Tầng ${c.stage}</div>
-    <div>HP: ${c.stats.hp}</div>
-    <div>ATK: ${c.stats.atk}</div>
-    <div>DEF: ${c.stats.def}</div>
-  `;
+  const key = "acc_" + u;
+  let acc = localStorage.getItem(key);
+
+  // CHƯA CÓ TÀI KHOẢN → TẠO MỚI
+  if (!acc) {
+    acc = {
+      password: p,
+      character: null
+    };
+    localStorage.setItem(key, JSON.stringify(acc));
+  } else {
+    acc = JSON.parse(acc);
+    if (acc.password !== p) {
+      alert("Sai mật khẩu");
+      return;
+    }
+  }
+
+  localStorage.setItem("currentUser", u);
+
+  if (acc.character) {
+    localStorage.setItem("character", JSON.stringify(acc.character));
+    showGame();
+  } else {
+    showCreate();
+  }
 }
+
+/* ================== CHARACTER STORAGE ================== */
+
+function loadChar() {
+  const raw = localStorage.getItem("character");
+  return raw ? JSON.parse(raw) : null;
+}
+
+function saveChar(c) {
+  const u = localStorage.getItem("currentUser");
+  if (!u) return;
+
+  const key = "acc_" + u;
+  const acc = JSON.parse(localStorage.getItem(key));
+  acc.character = c;
+
+  localStorage.setItem(key, JSON.stringify(acc));
+  localStorage.setItem("character", JSON.stringify(c));
+}
+
+/* ================== AUTO LOGIN ================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const u = localStorage.getItem("currentUser");
+  if (!u) {
+    showLogin();
+    return;
+  }
+
+  const acc = localStorage.getItem("acc_" + u);
+  if (!acc) {
+    showLogin();
+    return;
+  }
+
+  const parsed = JSON.parse(acc);
+  if (parsed.character) {
+    localStorage.setItem("character", JSON.stringify(parsed.character));
+    showGame();
+  } else {
+    showCreate();
+  }
+});
