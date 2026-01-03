@@ -24,7 +24,6 @@ input, button {
 
 button {
   background: #ffd36b;
-  color: #000;
   font-weight: bold;
 }
 
@@ -35,10 +34,7 @@ button {
   margin: 10px 0;
 }
 
-.gender { display:flex; gap:6px; }
-
-.log {
-  height: 140px;
-  overflow-y: auto;
-  font-size: 13px;
+.gender {
+  display: flex;
+  gap: 6px;
 }
