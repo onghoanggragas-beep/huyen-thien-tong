@@ -1,81 +1,83 @@
-/* ===== ACCOUNT SYSTEM ===== */
+/* ================= ACCOUNT SYSTEM ================= */
 
-function getAccounts(){
+function getAccounts() {
   return JSON.parse(localStorage.getItem("accounts") || "{}");
 }
 
-function saveAccounts(acc){
+function saveAccounts(acc) {
   localStorage.setItem("accounts", JSON.stringify(acc));
 }
 
-function login(){
+function login() {
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
 
-  if(!user || !pass){
+  if (!user || !pass) {
     alert("Vui lòng nhập tài khoản và mật khẩu");
     return;
   }
 
   let accounts = getAccounts();
 
-  // ĐĂNG KÝ
-  if(!accounts[user]){
+  // Đăng ký
+  if (!accounts[user]) {
     accounts[user] = {
       password: pass,
       character: null
     };
     saveAccounts(accounts);
   }
-  // ĐĂNG NHẬP
-  else{
-    if(accounts[user].password !== pass){
-      alert("Sai mật khẩu");
-      return;
-    }
+  // Đăng nhập
+  else if (accounts[user].password !== pass) {
+    alert("Sai mật khẩu");
+    return;
   }
 
   localStorage.setItem("currentUser", user);
 
   document.getElementById("login").classList.add("hidden");
 
-  if(accounts[user].character){
+  if (accounts[user].character) {
     localStorage.setItem("character", JSON.stringify(accounts[user].character));
     startGame();
-  }else{
+  } else {
     document.getElementById("create").classList.remove("hidden");
   }
 }
 
-/* ===== GAME CORE ===== */
+/* ================= CHARACTER STORAGE ================= */
 
-function loadChar(){
+function loadChar() {
   return JSON.parse(localStorage.getItem("character"));
 }
 
-function saveChar(c){
+function saveChar(char) {
   const user = localStorage.getItem("currentUser");
   let accounts = getAccounts();
-  accounts[user].character = c;
+  accounts[user].character = char;
   saveAccounts(accounts);
-  localStorage.setItem("character", JSON.stringify(c));
+  localStorage.setItem("character", JSON.stringify(char));
 }
 
-function log(m){
-  const l=document.getElementById("log");
-  l.innerHTML+=`<div>${m}</div>`;
-  l.scrollTop=l.scrollHeight;
-}
+/* ================= GAME CORE ================= */
 
-function startGame(){
+function startGame() {
   document.getElementById("create").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
   render();
 }
 
-function render(){
-  const c=loadChar();
-  const r=REALMS[c.realm];
+function log(msg) {
+  const el = document.getElementById("log");
+  el.innerHTML += `<div>${msg}</div>`;
+  el.scrollTop = el.scrollHeight;
+}
+
+function render() {
+  const c = loadChar();
+  if (!c) return;
+
+  const r = REALMS[c.realm];
 
   document.getElementById("charInfo").innerText =
     `${c.name} (${c.gender}) - ${c.root.typeName}`;
@@ -90,8 +92,11 @@ function render(){
     `Trạng thái: ${c.cultivating ? "Đang tu luyện" : "Dừng"}`;
 }
 
-/* ===== AUTO LOOP ===== */
-setInterval(()=>{
-  updateCultivation();
-  render();
-},1000);
+/* ================= LOOP ================= */
+
+setInterval(() => {
+  if (typeof updateCultivation === "function") {
+    updateCultivation();
+    render();
+  }
+}, 1000);
