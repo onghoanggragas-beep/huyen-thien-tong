@@ -10,78 +10,74 @@
 
 <div id="app">
 
-  <!-- LOGIN -->
-  <section id="login-screen" class="screen">
-    <h1>🌸 Tu Tiên Thế Giới 🌸</h1>
-    <input id="username" placeholder="Tài khoản">
-    <input id="password" type="password" placeholder="Mật khẩu">
-    <button onclick="login()">Đăng nhập / Đăng ký</button>
-  </section>
+<section id="login-screen" class="screen">
+  <h1>Tu Tiên Thế Giới</h1>
+  <input id="username" placeholder="Tài khoản">
+  <input id="password" type="password" placeholder="Mật khẩu">
+  <button onclick="login()">Đăng nhập / Đăng ký</button>
+</section>
 
-  <!-- CREATE -->
-  <section id="create-screen" class="screen hidden">
-    <h2>✨ Tạo Nhân Vật ✨</h2>
-    <input id="char-name" placeholder="Tên nhân vật">
+<section id="create-screen" class="screen hidden">
+  <h2>Tạo Nhân Vật</h2>
+  <input id="char-name" placeholder="Tên nhân vật">
+  <div class="gender">
+    <button onclick="selectGender('Nam')">Nam</button>
+    <button onclick="selectGender('Nữ')">Nữ</button>
+  </div>
+  <div id="roll-result" class="panel">Chưa roll</div>
+  <button onclick="rollCharacter()">🎲 Roll</button>
+  <button onclick="confirmCharacter()">✔ Xác nhận</button>
+</section>
 
-    <div class="gender">
-      <button onclick="selectGender('Nam')">Nam</button>
-      <button onclick="selectGender('Nữ')">Nữ</button>
-    </div>
+<section id="game-screen" class="screen hidden">
+  <div class="panel">
+    <h3>Bảng Nhân Vật</h3>
+    <div id="characterInfo"></div>
+  </div>
 
-    <div id="roll-result" class="panel">Chưa roll</div>
+  <button onclick="toggleCultivation()">Tu luyện / Dừng</button>
+  <button onclick="breakThrough()">Đột phá</button>
 
-    <button onclick="rollCharacter()">🎲 Roll</button>
-    <button onclick="confirmCharacter()">✔ Xác nhận</button>
-  </section>
+  <div class="panel">
+    <h3>Công pháp</h3>
+    <button onclick="learnCultivationMethod(1)">Ngũ Hành Quy Nguyên Công</button>
+    <button onclick="learnCultivationMethod(2)">Kim Linh Kiếm Quyết</button>
+  </div>
 
-  <!-- GAME -->
-  <section id="game-screen" class="screen hidden">
+  <div class="panel">
+    <h3>Bản đồ</h3>
+    <button onclick="goMap(1)">Linh Sơn</button>
+    <button onclick="goMap(2)">Hỏa Vực</button>
+  </div>
 
-    <div class="panel">
-      <h3>📜 Bảng Thông Tin Nhân Vật</h3>
-      <div id="characterInfo"></div>
-    </div>
+  <button onclick="openInventory()">Kho đồ</button>
+</section>
 
-    <button onclick="toggleCultivation()">🧘 Tu luyện / Dừng</button>
-    <button onclick="breakThrough()">⚡ Đột phá</button>
+<section id="battle" class="screen hidden">
+  <h2>Chiến đấu</h2>
+  <div id="playerHP"></div>
+  <div id="monsterHP"></div>
+  <button onclick="endBattle()">Rút lui</button>
+</section>
 
-    <div class="panel">
-      <h3>🗺 Bản đồ</h3>
-      <button onclick="goMap(1)">🌿 Linh Sơn</button>
-      <button onclick="goMap(2)">🔥 Hỏa Vực</button>
-      <button onclick="goMap(3)">❄️ Băng Nguyên</button>
-    </div>
-
-    <button onclick="openInventory()">🎒 Kho đồ</button>
-    <div id="log" class="log"></div>
-  </section>
-
-  <!-- BATTLE -->
-  <section id="battle" class="screen hidden">
-    <h2>⚔️ Chiến Đấu</h2>
-    <p id="playerHP"></p>
-    <p id="monsterHP"></p>
-    <div id="battleLog" class="log"></div>
-    <button onclick="endBattle()">⬅ Rút lui</button>
-  </section>
-
-  <!-- INVENTORY -->
-  <section id="inventory" class="screen hidden">
-    <h2>🎒 Kho Đồ</h2>
-    <div id="bagBox"></div>
-    <button onclick="backToGame()">⬅ Quay lại</button>
-  </section>
+<section id="inventory" class="screen hidden">
+  <h2>Kho đồ</h2>
+  <div id="bagBox"></div>
+  <button onclick="backToGame()">Quay lại</button>
+</section>
 
 </div>
 
+<!-- LOAD ORDER CỐ ĐỊNH -->
 <script src="data.js"></script>
+<script src="stats.js"></script>
 <script src="game.js"></script>
 <script src="character.js"></script>
-<script src="stats.js"></script>
 <script src="cultivation.js"></script>
 <script src="map.js"></script>
 <script src="battle.js"></script>
 <script src="inventory.js"></script>
 <script src="safe.js"></script>
+
 </body>
-</html>
+  </html>
