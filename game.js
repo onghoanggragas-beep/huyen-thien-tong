@@ -1,293 +1,178 @@
 /* =========================
-   AUTH & STORAGE
+   GAME CORE STATE
 ========================= */
-function hash(s){return btoa(unescape(encodeURIComponent(s)))}
-function loadUsers(){return JSON.parse(localStorage.getItem("users")||"{}")}
-function saveUsers(u){localStorage.setItem("users",JSON.stringify(u))}
+const player = {
+  hp: 100,
+  maxHp: 100,
+  atk: 15,
+  stage: 1,
+  exp: 0,
+  expMax: 100,
+  cultivating: false,
+  sprite: "player_male.png"
+};
 
-let currentUser=null;
-let player=null;
-let selectedGender=null;
+const enemy = {
+  hp: 80,
+  atk: 8,
+  sprite: "enemy.png"
+};
+
+let frameIndex = 0;
+let currentAnim = "idle";
+let animInterval = null;
 
 /* =========================
    DOM
 ========================= */
-const loginBox=document.getElementById("login");
-const createBox=document.getElementById("create");
-const gameBox=document.getElementById("game");
-const scene=document.getElementById("scene");
-const log=document.getElementById("log");
-const qiEl=document.getElementById("qi");
-const maxQiEl=document.getElementById("maxQi");
-const realmEl=document.getElementById("realm");
-const lingCanEl=document.getElementById("lingCan");
-const rollInfo=document.getElementById("rollInfo");
-
-const battleField=document.getElementById("battleField");
-const pHpBar=document.getElementById("pHp");
-const eHpBar=document.getElementById("eHp");
-const playerUnit=document.querySelector(".player");
-const enemyUnit=document.querySelector(".enemy");
-
-const alchemyPanel=document.getElementById("alchemyPanel");
-const forgePanel=document.getElementById("forgePanel");
-const alchemyBar=document.getElementById("alchemyBar");
-const forgeBar=document.getElementById("forgeBar");
+const playerEl = document.getElementById("player");
+const enemyEl = document.getElementById("enemy");
+const logEl = document.getElementById("log");
 
 /* =========================
-   LOGIN
+   SPRITE CONFIG
 ========================= */
-function login(){
-  const u=user.value.trim();
-  const p=pass.value;
-  if(!u||!p) return alert("Thiếu thông tin");
-  const users=loadUsers();
-  if(!users[u]){
-    users[u]={pass:hash(p),data:null};
-  }
-  if(users[u].pass!==hash(p)) return alert("Sai mật khẩu");
-  currentUser=u;
-  saveUsers(users);
-
-  if(users[u].data){
-    player=users[u].data;
-    startGame(true);
-  }else{
-    loginBox.classList.add("hidden");
-    createBox.classList.remove("hidden");
-  }
-}
+const SPRITE = {
+  frameW: 256,
+  frameH: 256,
+  idle: { row: 0, frames: 4, speed: 300 },
+  attack: { row: 1, frames: 4, speed: 120 },
+  hit: { row: 2, frames: 2, speed: 150 }
+};
 
 /* =========================
-   CREATE CHARACTER
+   INIT
 ========================= */
-function selectGender(g){
-  selectedGender=g;
-  rollInfo.innerText="Đã chọn giới tính: "+g;
+function init(){
+  loadSprite(playerEl, player.sprite);
+  loadSprite(enemyEl, enemy.sprite);
+  startAnim("idle");
+  loadGame();
+  autoCultivation();
+  log("🌱 Bắt đầu tu tiên...");
+}
+init();
+
+/* =========================
+   SPRITE FUNCTIONS
+========================= */
+function loadSprite(el, file){
+  el.style.backgroundImage = `url(assets/${file})`;
 }
 
-function rollAll(){
-  const linhCan=LINH_CAN_TYPES[Math.floor(Math.random()*LINH_CAN_TYPES.length)];
-  const tienThien=[];
-  while(tienThien.length<3){
-    const t=TIEN_THIEN_LIST[Math.floor(Math.random()*TIEN_THIEN_LIST.length)];
-    if(!tienThien.includes(t)) tienThien.push(t);
-  }
-
-  player={
-    gender:selectedGender,
-    realm:1,
-    qi:0,
-    maxQi:100,
-    hp:200,
-    atk:20,
-    linhCan,
-    tienThien,
-    stage:1,
-    inventory:[],
-    equipment:{},
-    lastOnline:Date.now()
-  };
-
-  rollInfo.innerText=
-    `${linhCan.name}\nTiên thiên: `+
-    tienThien.map(t=>`${t.name}(${t.tier})`).join(", ");
+function startAnim(type){
+  clearInterval(animInterval);
+  currentAnim = type;
+  frameIndex = 0;
+  const cfg = SPRITE[type];
+  animInterval = setInterval(()=>{
+    frameIndex = (frameIndex + 1) % cfg.frames;
+    updateFrame();
+  }, cfg.speed);
 }
 
-function confirmChar(){
-  if(!player||!selectedGender) return alert("Chưa hoàn tất");
-  const users=loadUsers();
-  users[currentUser].data=player;
-  saveUsers(users);
-  startGame(false);
+function updateFrame(){
+  const cfg = SPRITE[currentAnim];
+  const x = frameIndex * SPRITE.frameW;
+  const y = cfg.row * SPRITE.frameH;
+  const el = currentAnim === "attack" ? playerEl : playerEl;
+  el.style.backgroundPosition = `-${x}px -${y}px`;
 }
 
 /* =========================
-   START GAME
+   GAMEPLAY
 ========================= */
-function startGame(fromLoad){
-  loginBox.classList.add("hidden");
-  createBox.classList.add("hidden");
-  gameBox.classList.remove("hidden");
-
-  if(fromLoad) calcOffline();
-  addLog("🌱 Bắt đầu hành trình tu tiên");
-  updateUI();
+function cultivate(){
+  if(player.cultivating) return;
+  player.cultivating = true;
+  log("🧘 Đang tu luyện...");
 }
 
-/* =========================
-   OFFLINE PROGRESS
-========================= */
-function calcOffline(){
-  const now=Date.now();
-  const sec=(now-player.lastOnline)/1000;
-  let mult=player.linhCan.speed;
-  player.tienThien.forEach(t=>mult*=t.mult);
-
-  const gain=sec*mult;
-  player.qi=Math.min(player.maxQi,player.qi+gain);
-
-  addLog(`⏳ Offline ${Math.floor(sec)}s, nhận ${gain.toFixed(1)} linh khí`);
-}
-
-/* =========================
-   SCENE SWITCH
-========================= */
-function switchScene(type){
-  scene.className="";
-  battleField.classList.add("hidden");
-  alchemyPanel.classList.add("hidden");
-  forgePanel.classList.add("hidden");
-
-  if(type==="cultivation"){
-    scene.classList.add("cultivation");
-    scene.innerText="🧘 Đang tu luyện...";
-  }
-  if(type==="secret"){
-    addLog("🕳️ Khám phá bí cảnh...");
-    if(Math.random()<0.3){
-      const drop=randomEquip();
-      player.inventory.push(drop);
-      addLog(`✨ Nhặt được ${drop.type} (${drop.quality})`);
-    }else addLog("⚠️ Không có thu hoạch");
-  }
-  if(type==="home"){
-    addLog("🏠 Ở động phủ, tu vi ổn định");
-  }
-  if(type==="alchemy"){
-    alchemyPanel.classList.remove("hidden");
-    startProgress(alchemyBar,()=>{
-      addLog("⚗️ Luyện đan thành công");
-    });
-  }
-  if(type==="forge"){
-    forgePanel.classList.remove("hidden");
-    startProgress(forgeBar,()=>{
-      const eq=randomEquip();
-      player.inventory.push(eq);
-      addLog(`🔨 Luyện được ${eq.type} (${eq.quality})`);
-    });
-  }
-}
-
-/* =========================
-   AUTO BATTLE
-========================= */
-let enemyHP=0;
-let battleTimer=null;
-
-function startBattle(){
-  switchScene("battle");
-  battleField.classList.remove("hidden");
-
-  const stage=STAGES[player.stage-1]||STAGES[STAGES.length-1];
-  enemyHP=stage.enemyHP;
-  updateBattleUI();
-
-  addLog(`⚔️ Stage ${player.stage}${stage.boss?" (BOSS)":""}`);
-
-  if(battleTimer) clearInterval(battleTimer);
-  battleTimer=setInterval(battleTurn,1200);
-}
-
-function battleTurn(){
-  // Player attack
-  playerUnit.classList.add("attack");
-  setTimeout(()=>playerUnit.classList.remove("attack"),300);
-
-  const skill=VO_KY_LIST[Math.floor(Math.random()*VO_KY_LIST.length)];
-  const dmg=player.atk+skill.dmg;
-  enemyHP-=dmg;
-
-  enemyUnit.classList.add("hit");
-  setTimeout(()=>enemyUnit.classList.remove("hit"),300);
-
-  addLog(`⚔️ ${skill.name} gây ${dmg} sát thương`);
-
-  if(enemyHP<=0){
-    enemyHP=0;
-    clearInterval(battleTimer);
-    addLog("🎉 Thắng lợi!");
-
-    if(Math.random()<DROP_TABLE.voKy){
-      const vk=VO_KY_LIST[Math.floor(Math.random()*VO_KY_LIST.length)];
-      player.inventory.push(vk);
-      addLog("📜 Nhận võ kỹ mới");
+function autoCultivation(){
+  setInterval(()=>{
+    if(!player.cultivating) return;
+    player.exp += 2;
+    if(player.exp >= player.expMax){
+      player.exp = 0;
+      player.stage++;
+      player.expMax += 40;
+      player.atk += 3;
+      player.maxHp += 10;
+      player.hp = player.maxHp;
+      log(`✨ Đột phá cảnh giới! → Stage ${player.stage}`);
     }
-    if(Math.random()<DROP_TABLE.equip){
-      const eq=randomEquip();
-      player.inventory.push(eq);
-      addLog(`🛡️ Nhận trang bị (${eq.quality})`);
-    }
+    saveGame();
+  }, 1000);
+}
 
-    player.stage++;
+function battle(){
+  if(player.hp <= 0){
+    log("💀 Trọng thương, không thể chiến đấu");
+    return;
   }
-
-  updateBattleUI();
-}
-
-/* =========================
-   EQUIP
-========================= */
-function randomEquip(){
-  return JSON.parse(JSON.stringify(
-    EQUIPMENT_LIST[Math.floor(Math.random()*EQUIPMENT_LIST.length)]
-  ));
-}
-
-/* =========================
-   PROGRESS BAR
-========================= */
-function startProgress(bar,cb){
-  let p=0;
-  bar.style.width="0%";
-  const t=setInterval(()=>{
-    p+=10;
-    bar.style.width=p+"%";
-    if(p>=100){
-      clearInterval(t);
-      cb();
+  log("⚔️ Giao chiến!");
+  startAnim("attack");
+  setTimeout(()=>{
+    enemy.hp -= player.atk;
+    flash(enemyEl);
+    if(enemy.hp <= 0){
+      winBattle();
+    }else{
+      enemyAttack();
     }
-  },300);
+  }, 400);
+}
+
+function enemyAttack(){
+  setTimeout(()=>{
+    player.hp -= enemy.atk;
+    flash(playerEl);
+    if(player.hp <= 0){
+      log("💀 Bại trận...");
+      player.hp = Math.floor(player.maxHp/2);
+    }else{
+      log(`❤️ HP: ${player.hp}/${player.maxHp}`);
+    }
+    startAnim("idle");
+    saveGame();
+  }, 400);
+}
+
+function winBattle(){
+  log("🎉 Chiến thắng!");
+  enemy.hp = 80 + player.stage*10;
+  enemy.atk += 1;
+  player.exp += 20;
+  startAnim("idle");
+  saveGame();
 }
 
 /* =========================
-   AUTO TU LUYỆN + SAVE
+   EFFECTS
 ========================= */
-setInterval(()=>{
-  if(!player) return;
-  let mult=player.linhCan.speed;
-  player.tienThien.forEach(t=>mult*=t.mult);
-  player.qi=Math.min(player.maxQi,player.qi+mult);
-  player.lastOnline=Date.now();
-
-  const users=loadUsers();
-  users[currentUser].data=player;
-  saveUsers(users);
-
-  updateUI();
-},1000);
+function flash(el){
+  el.style.filter="brightness(1.8)";
+  setTimeout(()=>el.style.filter="",120);
+}
 
 /* =========================
-   UI
+   LOG
 ========================= */
-function updateUI(){
-  qiEl.innerText=player.qi.toFixed(1);
-  maxQiEl.innerText=player.maxQi;
-  realmEl.innerText="Luyện Khí "+player.realm;
-  lingCanEl.innerText=player.linhCan.name;
+function log(txt){
+  logEl.innerHTML += `<div>${txt}</div>`;
+  logEl.scrollTop = logEl.scrollHeight;
 }
 
-function updateBattleUI(){
-  pHpBar.style.width="100%";
-  eHpBar.style.width=Math.max(enemyHP,0)/(
-    STAGES[player.stage-1]?.enemyHP||100
-  )*100+"%";
+/* =========================
+   SAVE / LOAD
+========================= */
+function saveGame(){
+  localStorage.setItem("tutien_save", JSON.stringify(player));
 }
-
-function addLog(m){
-  const d=document.createElement("div");
-  d.innerText=m;
-  log.appendChild(d);
-  log.scrollTop=99999;
-}
+function loadGame(){
+  const save = localStorage.getItem("tutien_save");
+  if(save){
+    Object.assign(player, JSON.parse(save));
+    log("📦 Đã tải dữ liệu tu luyện");
+  }
+     }
