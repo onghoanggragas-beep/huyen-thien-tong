@@ -67,7 +67,20 @@ button {
 .small { font-size: 12px; opacity: .8; }
 </style>
 </head>
+<!-- COMBAT SCREEN -->
+<div id="combatScreen" class="overlay">
+  <div class="card" style="max-width:420px">
+    <h2>⚔️ Chiến đấu</h2>
 
+    <canvas id="combatCanvas" width="360" height="260"
+      style="background:#020617;border-radius:12px"></canvas>
+
+    <div class="small" id="combatLog">Chuẩn bị chiến đấu…</div>
+
+    <button onclick="playerAttack()">🗡️ Tấn công</button>
+    <button onclick="endCombat()">🏃 Rút lui</button>
+  </div>
+</div>
 <body>
 
 <!-- LOGIN -->
