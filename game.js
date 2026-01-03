@@ -1,72 +1,91 @@
-/* ========== RESET & STORAGE ========== */
+/* =================================================
+   ACCOUNT + STORAGE (ĐƠN GIẢN – ỔN ĐỊNH)
+================================================= */
 
-function resetAll() {
-  localStorage.clear();
-  location.reload();
+function getAccounts() {
+  return JSON.parse(localStorage.getItem("accounts") || "{}");
 }
 
-function getAccount(user) {
-  return JSON.parse(localStorage.getItem("acc_" + user));
+function saveAccounts(acc) {
+  localStorage.setItem("accounts", JSON.stringify(acc));
 }
 
-function saveAccount(user, data) {
-  localStorage.setItem("acc_" + user, JSON.stringify(data));
-}
-
-/* ========== LOGIN (KHÔNG THỂ FAIL) ========== */
+/* =================================================
+   LOGIN
+================================================= */
 
 function login() {
   const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value.trim();
 
-  if (!user) {
-    alert("Nhập tài khoản");
+  if (!user || !pass) {
+    alert("Vui lòng nhập tài khoản và mật khẩu");
     return;
   }
 
-  let acc = getAccount(user);
+  let accounts = getAccounts();
 
-  // Nếu chưa tồn tại → tạo mới
-  if (!acc) {
-    acc = {
-      password: pass || "",
+  // Đăng ký nếu chưa tồn tại
+  if (!accounts[user]) {
+    accounts[user] = {
+      password: pass,
       character: null
     };
-    saveAccount(user, acc);
+    saveAccounts(accounts);
+  }
+  // Đăng nhập
+  else if (accounts[user].password !== pass) {
+    alert("Sai mật khẩu");
+    return;
   }
 
-  // Nếu tồn tại nhưng pass khác → cho vào luôn (DEV MODE)
   localStorage.setItem("currentUser", user);
 
-  if (acc.character) {
-    localStorage.setItem("character", JSON.stringify(acc.character));
+  // Điều hướng màn hình
+  if (accounts[user].character) {
+    localStorage.setItem(
+      "character",
+      JSON.stringify(accounts[user].character)
+    );
     showGame();
   } else {
     showCreate();
   }
 }
 
-/* ========== SCREEN ========== */
+/* =================================================
+   SCREEN CONTROL (ĐÚNG ID HTML)
+================================================= */
 
-function hideAll() {
-  ["login","create","game","battle","inventory"].forEach(id=>{
+function hideAllScreens() {
+  [
+    "login-screen",
+    "create-screen",
+    "game-screen"
+  ].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add("hidden");
   });
 }
 
 function showCreate() {
-  hideAll();
-  document.getElementById("create").classList.remove("hidden");
+  hideAllScreens();
+  document
+    .getElementById("create-screen")
+    .classList.remove("hidden");
 }
 
 function showGame() {
-  hideAll();
-  document.getElementById("game").classList.remove("hidden");
+  hideAllScreens();
+  document
+    .getElementById("game-screen")
+    .classList.remove("hidden");
   render();
 }
 
-/* ========== CHARACTER ========== */
+/* =================================================
+   CHARACTER STORAGE
+================================================= */
 
 function loadChar() {
   return JSON.parse(localStorage.getItem("character"));
@@ -74,38 +93,41 @@ function loadChar() {
 
 function saveChar(char) {
   const user = localStorage.getItem("currentUser");
-  const acc = getAccount(user);
-  acc.character = char;
-  saveAccount(user, acc);
+  let accounts = getAccounts();
+
+  accounts[user].character = char;
+  saveAccounts(accounts);
+
   localStorage.setItem("character", JSON.stringify(char));
 }
 
-/* ========== GAME ========== */
+/* =================================================
+   GAME RENDER
+================================================= */
 
 function render() {
   const c = loadChar();
   if (!c) return;
 
-  const r = REALMS[c.realm];
+  const realm = REALMS[c.realmIndex];
 
   document.getElementById("charInfo").innerText =
     `${c.name} (${c.gender}) - ${c.root.typeName}`;
 
   document.getElementById("realmInfo").innerText =
-    `${r.name} - Tầng ${c.stage}`;
+    `${realm.name} - Tầng ${c.stage}`;
 
   document.getElementById("qiInfo").innerText =
-    `Linh khí: ${c.qi.toFixed(1)} / ${r.maxQi}`;
-
-  document.getElementById("cultivationInfo").innerText =
-    `Trạng thái: ${c.cultivating ? "Đang tu luyện" : "Dừng"}`;
+    `Linh khí: ${c.qi.toFixed(1)} / ${realm.maxQi}`;
 }
 
-/* ========== LOOP ========== */
+/* =================================================
+   AUTO LOOP (TU LUYỆN TREO)
+================================================= */
 
-setInterval(()=>{
+setInterval(() => {
   if (typeof updateCultivation === "function") {
     updateCultivation();
     render();
   }
-},1000);
+}, 1000);
