@@ -168,3 +168,17 @@ input, select {
   background: #020617;
   color: #e5e7eb;
   }
+.tag.selectable {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tag.selectable:hover {
+  border-color: #22c55e;
+}
+
+.tag.selectable.active {
+  background: linear-gradient(#22c55e,#16a34a);
+  color: #020617;
+  font-weight: bold;
+  }
