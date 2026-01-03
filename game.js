@@ -126,3 +126,11 @@ setInterval(() => {
     render();
   }
 }, 1000);
+// ===== DEBUG CLICK =====
+function openInventory() {
+  alert("ĐÃ CLICK KHO ĐỒ");
+}
+
+function breakThrough() {
+  alert("ĐÃ CLICK ĐỘT PHÁ");
+     }
