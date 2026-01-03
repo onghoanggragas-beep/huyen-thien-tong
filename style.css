@@ -139,6 +139,7 @@ button:active {
 /* LOG */
 .log-card {
   font-size: 12px;
+
 }
 #log {
   max-height: 160px;
@@ -148,3 +149,22 @@ button:active {
   margin-bottom: 4px;
   color: #cbd5f5;
 }
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.95);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: #020617;
+  color: #e5e7eb;
+  }
