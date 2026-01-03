@@ -1,68 +1,37 @@
-/* =====================================
-   CHARACTER CREATION & SAVE
-===================================== */
+let gender=null;
+let rolled=null;
 
-const CharacterSystem = (() => {
+function selectGender(g){ gender=g; }
 
-  function randomPick(arr, count) {
-    return [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
-  }
+function rollCharacter(){
+const root=rollSpiritRoot();
+let talents=[];
+while(talents.length<6){
+let t=TALENTS[Math.floor(Math.random()*TALENTS.length)];
+if(!talents.includes(t))talents.push(t);
+}
+rolled={root,talents};
+document.getElementById("rollBox").innerHTML=`
+<p><b>${root.typeName}</b></p>
+<p>${root.elements.join(", ")}</p>
+<p>Tiên thiên:</p>
+${talents.map(t=>`<div>${t.name} (${t.grade})</div>`).join("")}
+`;
+}
 
-  function rollPham() {
-    const roll = Math.random();
-    if (roll < 0.05) return "tien";
-    if (roll < 0.15) return "cuc";
-    if (roll < 0.35) return "thuong";
-    if (roll < 0.65) return "trung";
-    return "ha";
-  }
+function confirmCharacter(){
+const name=document.getElementById("charName").value;
+if(!name||!gender||!rolled)return alert("Thiếu thông tin");
 
-  function rollLinhCan() {
-    const count = Math.floor(Math.random() * 3) + 1;
-    return randomPick(LINH_CAN, count).map(lc => lc.id);
-  }
-
-  function rollTienThien() {
-    return randomPick(TIEN_THIEN, 5).map(tt => ({
-      ...tt,
-      pham: rollPham()
-    }));
-  }
-
-  function createCharacter(name, gender) {
-    const char = {
-      name,
-      gender,
-      stage: 1,
-      exp: 0,
-      expMax: 100,
-      hp: 100,
-      maxHp: 100,
-      atk: 10,
-      def: 5,
-      linh_can: rollLinhCan(),
-      tien_thien: rollTienThien(),
-      cong_phap: null,
-      vo_ky: [],
-      equipment: {},
-      inventory: []
-    };
-    saveCharacter(char);
-    return char;
-  }
-
-  function saveCharacter(char) {
-    localStorage.setItem("character", JSON.stringify(char));
-  }
-
-  function loadCharacter() {
-    const data = localStorage.getItem("character");
-    return data ? JSON.parse(data) : null;
-  }
-
-  return {
-    createCharacter,
-    loadCharacter,
-    saveCharacter
-  };
-})();
+const char={
+name,gender,
+root:rolled.root,
+talents:rolled.talents.slice(0,3),
+realm:0,stage:1,
+qi:0,
+cultivating:false,
+last:Date.now()
+};
+localStorage.setItem("character",JSON.stringify(char));
+startGame();
+}
