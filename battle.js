@@ -4,23 +4,29 @@
 
 let battleState = null;
 
-window.startBattle = function (mapId = 1) {
+window.startBattle = function (mapId = 1, floor = 1) {
   const char = loadChar();
   if (!char) return;
 
-  const baseHP = 100 + char.realmIndex * 50;
-  const baseATK = 10 + char.realmIndex * 5;
+  const map = MAPS.find(m => m.id === mapId);
+
+  const scale = map ? map.monsterScale : 1;
 
   battleState = {
     mapId,
+    floor,
+    isBoss: map && floor % map.bossEvery === 0,
     player: {
-      hp: baseHP,
-      atk: baseATK
+      hp: 100 + char.realmIndex * 50,
+      atk: 10 + char.realmIndex * 5
     },
     monster: {
-      name: "Quái thường",
-      hp: 60 + mapId * 20,
-      atk: 8 + mapId * 4
+      name:
+        map && floor % map.bossEvery === 0
+          ? "👑 Boss " + map.name
+          : "Quái " + map.name,
+      hp: Math.floor((60 + floor * 10) * scale),
+      atk: Math.floor((8 + floor * 4) * scale)
     }
   };
 
@@ -55,7 +61,7 @@ function playerAttack() {
   logBattle(`🗡️ Bạn gây ${battleState.player.atk} sát thương`);
 
   if (battleState.monster.hp <= 0) {
-    winBattle();
+    winBattle();setNextFloor(battleState.mapId);
     return;
   }
 
