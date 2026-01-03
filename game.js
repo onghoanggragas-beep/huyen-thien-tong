@@ -213,3 +213,77 @@ window.useSkill = id => BattleSystem.useSkill(id);
    AUTO BOOT
 ========================= */
 window.onload = initGame;
+/* =========================
+   LOGIN & CHARACTER FLOW
+========================= */
+
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (!user || !pass) return alert("Nhập đủ thông tin");
+
+  localStorage.setItem("account", user);
+  document.getElementById("loginScreen").style.display = "none";
+
+  const char = CharacterSystem.loadCharacter();
+  if (!char) {
+    showCreateCharacter();
+  } else {
+    initGame();
+  }
+}
+
+function showRegister() {
+  alert("Hệ thống demo: nhập tên bất kỳ để đăng nhập");
+}
+
+function showCreateCharacter() {
+  document.getElementById("createCharScreen").style.display = "flex";
+  rerollCharacter();
+}
+
+/* =========================
+   ROLL CHARACTER
+========================= */
+
+let tempLinhCan = [];
+let tempTienThien = [];
+
+function rerollCharacter() {
+  tempLinhCan = rollLinhCan();
+  tempTienThien = rollTienThien();
+
+  document.getElementById("rollLinhCan").innerText =
+    tempLinhCan.map(id => LINH_CAN.find(l => l.id === id).name).join(", ");
+
+  document.getElementById("rollTienThien").innerText =
+    tempTienThien.map(t => t.name).join(", ");
+}
+
+function confirmCreate() {
+  const name = document.getElementById("charNameInput").value;
+  const gender = document.getElementById("charGenderInput").value;
+
+  if (!name) return alert("Nhập tên nhân vật");
+
+  CharacterSystem.createCharacter({
+    name,
+    gender,
+    linh_can: tempLinhCan,
+    tien_thien: tempTienThien
+  });
+
+  document.getElementById("createCharScreen").style.display = "none";
+  initGame();
+}
+
+/* =========================
+   AUTO CHECK ON LOAD
+========================= */
+window.addEventListener("load", () => {
+  const acc = localStorage.getItem("account");
+  if (!acc) {
+    document.getElementById("loginScreen").style.display = "flex";
+  }
+});
