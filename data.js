@@ -811,3 +811,16 @@ const DROP_TABLE = {
   equip: 0.3,
   tienThien: 0.05
 };
+function rollLinhCan() {
+  const pool = [...LINH_CAN];
+  const count = Math.random() < 0.6 ? 1 : Math.random() < 0.85 ? 2 : 3;
+  return pool.sort(() => 0.5 - Math.random())
+             .slice(0, count)
+             .map(l => l.id);
+}
+
+function rollTienThien(count = 6) {
+  return [...TIEN_THIEN]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, count);
+}
