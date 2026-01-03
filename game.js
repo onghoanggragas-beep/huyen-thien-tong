@@ -1,44 +1,72 @@
-function login(){
-  const u = username.value.trim();
-  const p = password.value.trim();
-  if(!u || !p) return alert("Nhập tài khoản");
+document.addEventListener("DOMContentLoaded", () => {
 
-  let acc = JSON.parse(localStorage.getItem("acc_"+u));
-  if(!acc){
-    acc = { password:p, character:null };
-    localStorage.setItem("acc_"+u, JSON.stringify(acc));
-  }
-  if(acc.password!==p) return alert("Sai mật khẩu");
+  const loginBtn = document.getElementById("loginBtn");
+  const rollBtn = document.getElementById("rollBtn");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const cultivateBtn = document.getElementById("cultivateBtn");
+  const breakBtn = document.getElementById("breakBtn");
+  const inventoryBtn = document.getElementById("inventoryBtn");
+  const backGameBtn = document.getElementById("backGameBtn");
 
-  localStorage.setItem("currentUser", u);
+  if (loginBtn) loginBtn.onclick = login;
+  if (rollBtn) rollBtn.onclick = rollCharacter;
+  if (confirmBtn) confirmBtn.onclick = confirmCharacter;
+  if (cultivateBtn) cultivateBtn.onclick = toggleCultivation;
+  if (breakBtn) breakBtn.onclick = breakThrough;
+  if (inventoryBtn) inventoryBtn.onclick = openInventory;
+  if (backGameBtn) backGameBtn.onclick = showGame;
 
-  if(acc.character){
-    localStorage.setItem("character", JSON.stringify(acc.character));
-    showGame();
-  } else {
-    showCreate();
-  }
+  document.querySelectorAll("[data-gender]").forEach(btn => {
+    btn.onclick = () => selectGender(btn.dataset.gender);
+  });
+
+  document.querySelectorAll("[data-map]").forEach(btn => {
+    btn.onclick = () => goMap(btn.dataset.map);
+  });
+
+});
+
+function hideAllScreens() {
+  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
 }
 
-function hideAll(){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
-}
-function showCreate(){ hideAll(); create-screen.classList.remove("hidden"); }
-function showGame(){ hideAll(); game-screen.classList.remove("hidden"); render(); }
-
-function loadChar(){ return JSON.parse(localStorage.getItem("character")); }
-function saveChar(c){
-  const u=localStorage.getItem("currentUser");
-  const acc=JSON.parse(localStorage.getItem("acc_"+u));
-  acc.character=c;
-  localStorage.setItem("acc_"+u,JSON.stringify(acc));
-  localStorage.setItem("character",JSON.stringify(c));
-}
-
-function render(){
+function showGame() {
+  hideAllScreens();
+  const g = document.getElementById("game-screen");
+  if (g) g.classList.remove("hidden");
   renderCharacterInfo();
 }
 
-function log(msg){
-  log.innerHTML+=`<div>${msg}</div>`;
+function showCreate() {
+  hideAllScreens();
+  const c = document.getElementById("create-screen");
+  if (c) c.classList.remove("hidden");
+}
+
+function loadChar() {
+  const c = localStorage.getItem("character");
+  return c ? JSON.parse(c) : null;
+}
+
+function saveChar(c) {
+  localStorage.setItem("character", JSON.stringify(c));
+}
+
+function renderCharacterInfo() {
+  const el = document.getElementById("characterInfo");
+  if (!el) return;
+
+  const c = loadChar();
+  if (!c) {
+    el.innerHTML = "Chưa có nhân vật";
+    return;
+  }
+
+  el.innerHTML = `
+    <div><b>${c.name}</b> (${c.gender})</div>
+    <div>Tu vi: ${REALMS[c.realmIndex].name} - Tầng ${c.stage}</div>
+    <div>HP: ${c.stats.hp}</div>
+    <div>ATK: ${c.stats.atk}</div>
+    <div>DEF: ${c.stats.def}</div>
+  `;
 }
