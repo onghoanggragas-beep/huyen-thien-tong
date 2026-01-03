@@ -1,4 +1,4 @@
-/* ================== CORE ================== */
+/* ================= CORE SCREEN ================= */
 
 function hideAllScreens() {
   document.querySelectorAll(".screen").forEach(s =>
@@ -19,10 +19,9 @@ function showCreate() {
 function showGame() {
   hideAllScreens();
   document.getElementById("game-screen").classList.remove("hidden");
-  renderCharacterInfo();
 }
 
-/* ================== LOGIN ================== */
+/* ================= LOGIN ================= */
 
 function login() {
   const u = document.getElementById("username").value.trim();
@@ -36,7 +35,6 @@ function login() {
   const key = "acc_" + u;
   let acc = localStorage.getItem(key);
 
-  // CHƯA CÓ TÀI KHOẢN → TẠO MỚI
   if (!acc) {
     acc = {
       password: p,
@@ -61,7 +59,7 @@ function login() {
   }
 }
 
-/* ================== CHARACTER STORAGE ================== */
+/* ================= CHARACTER STORAGE ================= */
 
 function loadChar() {
   const raw = localStorage.getItem("character");
@@ -80,7 +78,7 @@ function saveChar(c) {
   localStorage.setItem("character", JSON.stringify(c));
 }
 
-/* ================== AUTO LOGIN ================== */
+/* ================= AUTO LOAD ================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   const u = localStorage.getItem("currentUser");
