@@ -1,29 +1,30 @@
-const log = document.getElementById("log");
+// ====== DOM ======
+const logBox = document.getElementById("log");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("send");
 
-// Hàm ghi log ra màn hình
-function write(text, who = "npc") {
+// ====== Helper ======
+function addMsg(text, role = "npc") {
   const div = document.createElement("div");
-  div.className = who;
-  div.innerText = text;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
+  div.className = role;
+  div.textContent = text;
+  logBox.appendChild(div);
+  logBox.scrollTop = logBox.scrollHeight;
 }
 
-// Khi vào game
+// ====== Enter game ======
 async function enterGame() {
   try {
     const res = await fetch("/enter");
     const data = await res.json();
-    write(data.intro, "npc");
+    addMsg(data.intro || "Ngươi bước vào Huyền Thiên Tông.", "npc");
   } catch (e) {
-    write("❌ Không thể kết nối tông môn.", "npc");
+    addMsg("❌ Không thể kết nối tông môn.", "npc");
   }
 }
 
-// Gửi tin nhắn cho NPC
-async function talk(message) {
+// ====== Talk to NPC ======
+async function talkNPC(message) {
   try {
     const res = await fetch("/talk", {
       method: "POST",
@@ -31,10 +32,48 @@ async function talk(message) {
       body: JSON.stringify({ message })
     });
     const data = await res.json();
-    write(data.reply, "npc");
+    addMsg(data.reply || "NPC im lặng.", "npc");
   } catch (e) {
-    write("❌ NPC không trả lời.", "npc");
+    addMsg("❌ NPC không trả lời.", "npc");
   }
+}
+
+// ====== Cultivate ======
+async function cultivate() {
+  try {
+    const res = await fetch("/cultivate");
+    const data = await res.json();
+    if (data.dead) {
+      addMsg("💀 Tẩu hỏa nhập ma, thân tử đạo tiêu.", "npc");
+    } else {
+      addMsg(`🧘 Tu luyện thành công, cảnh giới hiện tại: ${data.realm}`, "npc");
+    }
+  } catch (e) {
+    addMsg("❌ Tu luyện thất bại.", "npc");
+  }
+}
+
+// ====== Events ======
+sendBtn.addEventListener("click", () => {
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  addMsg(msg, "player");
+  input.value = "";
+
+  if (msg.toLowerCase().includes("tu luyện")) {
+    cultivate();
+  } else {
+    talkNPC(msg);
+  }
+});
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendBtn.click();
+});
+
+// ====== Start ======
+enterGame();  }
 }
 
 // Tu luyện
