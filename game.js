@@ -246,44 +246,93 @@ function showCreateCharacter() {
 /* =========================
    ROLL CHARACTER
 ========================= */
+/* =========================
+   CREATE CHARACTER – FIX FULL
+========================= */
 
-let tempLinhCan = [];
-let tempTienThien = [];
+let rolledLinhCan = [];
+let rolledTienThien = [];
+let selectedTienThien = [];
 
+/* -------- ROLL -------- */
 function rerollCharacter() {
-  tempLinhCan = rollLinhCan();
-  tempTienThien = rollTienThien();
+  rolledLinhCan = rollLinhCan();        // từ data.js
+  rolledTienThien = rollTienThien(8);   // roll 8 để chọn 3
+  selectedTienThien = [];
 
-  document.getElementById("rollLinhCan").innerText =
-    tempLinhCan.map(id => LINH_CAN.find(l => l.id === id).name).join(", ");
-
-  document.getElementById("rollTienThien").innerText =
-    tempTienThien.map(t => t.name).join(", ");
+  renderCreateCharacter();
 }
 
+/* -------- RENDER -------- */
+function renderCreateCharacter() {
+  // Linh căn
+  const lcBox = document.getElementById("rollLinhCan");
+  lcBox.innerHTML = "";
+
+  rolledLinhCan.forEach(id => {
+    const lc = LINH_CAN.find(l => l.id === id);
+    if (!lc) return;
+
+    const tag = document.createElement("div");
+    tag.className = "tag";
+    tag.innerText = `${lc.name} (${PHAM_CHAT[lc.pham].name})`;
+    lcBox.appendChild(tag);
+  });
+
+  // Tiên thiên
+  const ttBox = document.getElementById("rollTienThien");
+  ttBox.innerHTML = "";
+
+  rolledTienThien.forEach(tt => {
+    const btn = document.createElement("div");
+    btn.className = "tag selectable";
+    btn.innerText = `${tt.name} (${PHAM_CHAT[tt.pham].name})`;
+
+    btn.onclick = () => toggleTienThien(tt, btn);
+    ttBox.appendChild(btn);
+  });
+}
+
+/* -------- SELECT TIÊN THIÊN -------- */
+function toggleTienThien(tt, el) {
+  const index = selectedTienThien.findIndex(t => t.id === tt.id);
+
+  if (index >= 0) {
+    selectedTienThien.splice(index, 1);
+    el.classList.remove("active");
+  } else {
+    if (selectedTienThien.length >= 3) {
+      alert("Chỉ được chọn tối đa 3 tiên thiên");
+      return;
+    }
+    selectedTienThien.push(tt);
+    el.classList.add("active");
+  }
+}
+
+/* -------- CONFIRM -------- */
 function confirmCreate() {
-  const name = document.getElementById("charNameInput").value;
+  const name = document.getElementById("charNameInput").value.trim();
   const gender = document.getElementById("charGenderInput").value;
 
-  if (!name) return alert("Nhập tên nhân vật");
+  if (!name) {
+    alert("Vui lòng nhập tên nhân vật");
+    return;
+  }
+
+  if (selectedTienThien.length !== 3) {
+    alert("Phải chọn đúng 3 tiên thiên");
+    return;
+  }
 
   CharacterSystem.createCharacter({
     name,
     gender,
-    linh_can: tempLinhCan,
-    tien_thien: tempTienThien
+    linh_can: rolledLinhCan,
+    tien_thien: selectedTienThien
   });
 
   document.getElementById("createCharScreen").style.display = "none";
   initGame();
 }
-
-/* =========================
-   AUTO CHECK ON LOAD
-========================= */
-window.addEventListener("load", () => {
-  const acc = localStorage.getItem("account");
-  if (!acc) {
-    document.getElementById("loginScreen").style.display = "flex";
-  }
 });
