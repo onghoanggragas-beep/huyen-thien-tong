@@ -1,6 +1,5 @@
-function openInventory(){
-  hideAll();
-  inventory.classList.remove("hidden");
-  bagBox.innerHTML="(Chưa có vật phẩm)";
+function openInventory() {
+  hideAllScreens();
+  const inv = document.getElementById("inventory-screen");
+  if (inv) inv.classList.remove("hidden");
 }
-function backToGame(){ showGame(); }
