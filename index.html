@@ -2,24 +2,16 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Tu Tiên Giới</title>
 
 <style>
 body{margin:0;background:#020617;color:#e5e7eb;font-family:system-ui}
 .hidden{display:none}
-header{padding:10px;text-align:center;border-bottom:1px solid #1e293b;font-weight:bold}
-
-#scene{
-  height:150px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:.4s;
-}
+header{text-align:center;padding:10px;border-bottom:1px solid #1e293b;font-weight:bold}
+#scene{height:160px;display:flex;align-items:center;justify-content:center;transition:.4s}
 .cult{animation:glow 2s infinite}
 .battle{animation:shake .4s}
-
 @keyframes glow{
   0%{box-shadow:0 0 10px rgba(0,200,255,.2)}
   50%{box-shadow:0 0 30px rgba(0,200,255,.6)}
@@ -32,45 +24,52 @@ header{padding:10px;text-align:center;border-bottom:1px solid #1e293b;font-weigh
   75%{transform:translateX(-4px)}
   100%{transform:translateX(0)}
 }
-
 .panel{border:1px solid #1e293b;margin:6px;padding:6px;border-radius:6px;font-size:13px}
-#map button{width:100%;margin:4px 0}
-#log{height:180px;overflow:auto;padding:6px}
-button{background:#2563eb;color:white;border:none;padding:6px;border-radius:6px}
+button{background:#2563eb;color:white;border:none;padding:6px;border-radius:6px;width:100%;margin:4px 0}
+#log{height:160px;overflow:auto;padding:6px}
 </style>
 </head>
 
 <body>
+
 <header>🏯 TU TIÊN GIỚI</header>
 
-<div id="scene">🧘 Tu luyện…</div>
-
-<div class="panel">
-  Khu vực: <span id="area"></span><br>
-  Cảnh giới: <span id="realm"></span><br>
-  Linh khí: <span id="qi"></span>/<span id="maxQi"></span>
+<div id="login">
+  <div class="panel">
+    <input id="user" placeholder="Tài khoản">
+    <input id="pass" type="password" placeholder="Mật khẩu">
+    <button onclick="login()">Đăng nhập / Đăng ký</button>
+  </div>
 </div>
 
-<div class="panel">
-  Linh căn: <span id="lingCan"></span><br>
-  Công pháp: <span id="gongFa"></span>
+<div id="create" class="hidden">
+  <div class="panel">
+    <b>Chọn giới tính</b><br>
+    <button onclick="selectGender('Nam')">Nam</button>
+    <button onclick="selectGender('Nữ')">Nữ</button>
+    <div id="rollInfo"></div>
+    <button onclick="rollAll()">🎲 Roll linh căn & tiên thiên</button>
+    <button onclick="confirmChar()">✔ Xác nhận</button>
+  </div>
 </div>
 
-<div class="panel" id="map">
-  <b>🗺️ Bản đồ</b>
-</div>
+<div id="game" class="hidden">
+  <div id="scene">🧘 Tu luyện…</div>
 
-<div class="panel">
-  <b>🎒 Kho đồ</b>
-  <div id="inventory"></div>
-</div>
+  <div class="panel">
+    Cảnh giới: <span id="realm"></span><br>
+    Linh khí: <span id="qi"></span>/<span id="maxQi"></span><br>
+    Linh căn: <span id="lingCan"></span>
+  </div>
 
-<div id="log"></div>
+  <div class="panel">
+    <button onclick="switchScene('cult')">🧘 Tu luyện</button>
+    <button onclick="switchScene('battle')">⚔️ Chiến đấu</button>
+    <button onclick="switchScene('secret')">🕳️ Bí cảnh</button>
+    <button onclick="switchScene('home')">🏠 Động phủ</button>
+  </div>
 
-<div class="panel">
-  <button id="cultBtn">🌬️ Tu luyện</button>
-  <button id="fightBtn">⚔️ Chiến đấu</button>
-  <button id="secretBtn">🕳️ Bí cảnh</button>
+  <div id="log"></div>
 </div>
 
 <script src="data.js"></script>
