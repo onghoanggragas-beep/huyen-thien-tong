@@ -6,37 +6,20 @@
 <title>Tu Tiên Giới</title>
 
 <style>
-body{
-  margin:0;
-  background:#020617;
-  color:#e5e7eb;
-  font-family:system-ui,-apple-system;
-}
-header{
-  background:#020617;
-  text-align:center;
-  padding:12px;
-  font-weight:bold;
-  font-size:18px;
-  border-bottom:1px solid #1e293b;
-}
+body{margin:0;background:#020617;color:#e5e7eb;font-family:system-ui}
+.hidden{display:none}
+header{padding:10px;text-align:center;border-bottom:1px solid #1e293b;font-weight:bold}
+
 #scene{
-  height:160px;
+  height:150px;
   display:flex;
   align-items:center;
   justify-content:center;
-  text-align:center;
-  font-size:16px;
-  background-size:cover;
-  background-position:center;
-  transition:all .5s;
+  transition:.4s;
 }
-#scene.glow{
-  animation:glow 2s infinite;
-}
-#scene.shake{
-  animation:shake .4s;
-}
+.cult{animation:glow 2s infinite}
+.battle{animation:shake .4s}
+
 @keyframes glow{
   0%{box-shadow:0 0 10px rgba(0,200,255,.2)}
   50%{box-shadow:0 0 30px rgba(0,200,255,.6)}
@@ -49,52 +32,32 @@ header{
   75%{transform:translateX(-4px)}
   100%{transform:translateX(0)}
 }
-.panel{
-  border:1px solid #1e293b;
-  border-radius:6px;
-  padding:6px;
-  margin:6px;
-  font-size:13px;
-}
-#panels{display:flex}
-#log{
-  height:200px;
-  overflow:auto;
-  padding:8px;
-  font-size:13px;
-}
-button{
-  background:#2563eb;
-  color:white;
-  border:none;
-  padding:8px;
-  border-radius:6px;
-  margin:6px;
-  width:45%;
-}
-#actions{display:flex;justify-content:space-around}
+
+.panel{border:1px solid #1e293b;margin:6px;padding:6px;border-radius:6px;font-size:13px}
+#map button{width:100%;margin:4px 0}
+#log{height:180px;overflow:auto;padding:6px}
+button{background:#2563eb;color:white;border:none;padding:6px;border-radius:6px}
 </style>
 </head>
 
 <body>
 <header>🏯 TU TIÊN GIỚI</header>
 
-<div id="scene">🧘 Đang nhập định tu luyện…</div>
+<div id="scene">🧘 Tu luyện…</div>
 
-<div id="panels">
-  <div class="panel">
-    <b>🧍 Nhân vật</b><br>
-    Cảnh giới: <span id="realm">Luyện Khí 1</span><br>
-    Linh khí: <span id="qi">0</span>/<span id="maxQi">100</span><br>
-    Linh căn: <span id="lingCan">?</span><br>
-    Công pháp: <span id="gongFa">?</span>
-  </div>
-  <div class="panel">
-    <b>📊 Thuộc tính</b><br>
-    HP: <span id="hp">100</span><br>
-    Công: <span id="atk">10</span><br>
-    Thủ: <span id="def">5</span>
-  </div>
+<div class="panel">
+  Khu vực: <span id="area"></span><br>
+  Cảnh giới: <span id="realm"></span><br>
+  Linh khí: <span id="qi"></span>/<span id="maxQi"></span>
+</div>
+
+<div class="panel">
+  Linh căn: <span id="lingCan"></span><br>
+  Công pháp: <span id="gongFa"></span>
+</div>
+
+<div class="panel" id="map">
+  <b>🗺️ Bản đồ</b>
 </div>
 
 <div class="panel">
@@ -104,11 +67,13 @@ button{
 
 <div id="log"></div>
 
-<div id="actions">
+<div class="panel">
+  <button id="cultBtn">🌬️ Tu luyện</button>
   <button id="fightBtn">⚔️ Chiến đấu</button>
-  <button id="pillBtn">💊 Dùng đan</button>
+  <button id="secretBtn">🕳️ Bí cảnh</button>
 </div>
 
-<script src="chat.js"></script>
+<script src="data.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
