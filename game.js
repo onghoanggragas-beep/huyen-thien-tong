@@ -141,3 +141,15 @@ document.addEventListener("DOMContentLoaded", function () {
     showCreate();
   }
 });
+/* ================= LOGOUT ================= */
+
+function logout() {
+  // Xóa user hiện tại
+  localStorage.removeItem("currentUser");
+
+  // Xóa nhân vật đang load (session)
+  localStorage.removeItem("character");
+
+  // Quay về màn đăng nhập
+  showLogin();
+}
