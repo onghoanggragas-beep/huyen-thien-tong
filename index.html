@@ -1,81 +1,112 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tu Tiên Giới</title>
 
 <style>
-body{margin:0;background:#05070a;color:#e5e7eb;font-family:sans-serif}
-header{background:#0f172a;padding:12px;text-align:center;font-weight:bold}
-#main{display:flex;flex-direction:column;height:100vh}
-#panels{display:flex;gap:6px;padding:6px;background:#020617}
-.panel{flex:1;border:1px solid #1e293b;padding:6px;border-radius:6px;font-size:13px}
-#log{flex:1;overflow:auto;padding:10px}
-button{background:#2563eb;color:white;border:none;padding:6px;border-radius:6px;margin:2px}
-button:active{transform:scale(.95)}
-#actions{display:flex;padding:6px;background:#020617}
-#scene{padding:6px;background:#020617;text-align:center}
-.hidden{display:none}
-#inventory div{margin-bottom:4px}
+body{
+  margin:0;
+  background:#020617;
+  color:#e5e7eb;
+  font-family:system-ui,-apple-system;
+}
+header{
+  background:#020617;
+  text-align:center;
+  padding:12px;
+  font-weight:bold;
+  font-size:18px;
+  border-bottom:1px solid #1e293b;
+}
+#scene{
+  height:160px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:16px;
+  background-size:cover;
+  background-position:center;
+  transition:all .5s;
+}
+#scene.glow{
+  animation:glow 2s infinite;
+}
+#scene.shake{
+  animation:shake .4s;
+}
+@keyframes glow{
+  0%{box-shadow:0 0 10px rgba(0,200,255,.2)}
+  50%{box-shadow:0 0 30px rgba(0,200,255,.6)}
+  100%{box-shadow:0 0 10px rgba(0,200,255,.2)}
+}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-4px)}
+  100%{transform:translateX(0)}
+}
+.panel{
+  border:1px solid #1e293b;
+  border-radius:6px;
+  padding:6px;
+  margin:6px;
+  font-size:13px;
+}
+#panels{display:flex}
+#log{
+  height:200px;
+  overflow:auto;
+  padding:8px;
+  font-size:13px;
+}
+button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:8px;
+  border-radius:6px;
+  margin:6px;
+  width:45%;
+}
+#actions{display:flex;justify-content:space-around}
 </style>
-  #scene {
-  min-height: 140px;
-  background-size: cover;
-  background-position: center;
-  border-top: 1px solid #1e293b;
-  border-bottom: 1px solid #1e293b;
-  transition: background-image 0.6s ease;
-}
-
-.cultivation {
-  background-image: url("assets/bg/cultivation.jpg");
-}
-
-.battle {
-  background-image: url("assets/bg/battle.jpg");
-}
 </head>
 
 <body>
 <header>🏯 TU TIÊN GIỚI</header>
 
-<div id="main">
+<div id="scene">🧘 Đang nhập định tu luyện…</div>
 
 <div id="panels">
-  <div class="panel" id="charPanel">
+  <div class="panel">
     <b>🧍 Nhân vật</b><br>
-    Tên: <span id="cName"></span><br>
-    Giới: <span id="cGender"></span><br>
     Cảnh giới: <span id="realm">Luyện Khí 1</span><br>
     Linh khí: <span id="qi">0</span>/<span id="maxQi">100</span><br>
-    Linh căn: <span id="lingCan"></span><br>
-    Công pháp: <span id="gongFa"></span>
+    Linh căn: <span id="lingCan">?</span><br>
+    Công pháp: <span id="gongFa">?</span>
   </div>
-
-  <div class="panel" id="statPanel">
+  <div class="panel">
     <b>📊 Thuộc tính</b><br>
     HP: <span id="hp">100</span><br>
     Công: <span id="atk">10</span><br>
-    Thủ: <span id="def">5</span><br>
-    Tốc: <span id="spd">5</span><br>
-    Ngộ: <span id="int">10</span>
-  </div>
-
-  <div class="panel" id="inventory">
-    <b>🎒 Kho đồ</b><br>
+    Thủ: <span id="def">5</span>
   </div>
 </div>
 
-<div id="scene">🌌 Đang tĩnh tọa tu luyện…</div>
+<div class="panel">
+  <b>🎒 Kho đồ</b>
+  <div id="inventory"></div>
+</div>
 
 <div id="log"></div>
 
 <div id="actions">
   <button id="fightBtn">⚔️ Chiến đấu</button>
-  <button id="usePill">💊 Dùng đan</button>
-</div>
-
+  <button id="pillBtn">💊 Dùng đan</button>
 </div>
 
 <script src="chat.js"></script>
