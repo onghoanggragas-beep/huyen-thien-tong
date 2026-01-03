@@ -1,178 +1,210 @@
-/* =========================
-   GAME CORE STATE
-========================= */
-const player = {
-  hp: 100,
-  maxHp: 100,
-  atk: 15,
-  stage: 1,
-  exp: 0,
-  expMax: 100,
-  cultivating: false,
-  sprite: "player_male.png"
-};
+/* =====================================
+   GAME BOOTSTRAP & UI CONTROLLER
+   TU TIEN RPG – MOBILE WEB
+===================================== */
 
-const enemy = {
-  hp: 80,
-  atk: 8,
-  sprite: "enemy.png"
-};
-
-let frameIndex = 0;
-let currentAnim = "idle";
-let animInterval = null;
+let currentCharacter = null;
 
 /* =========================
-   DOM
+   LOG SYSTEM
 ========================= */
-const playerEl = document.getElementById("player");
-const enemyEl = document.getElementById("enemy");
-const logEl = document.getElementById("log");
+function log(message) {
+  const logBox = document.getElementById("log");
+  if (!logBox) return;
 
-/* =========================
-   SPRITE CONFIG
-========================= */
-const SPRITE = {
-  frameW: 256,
-  frameH: 256,
-  idle: { row: 0, frames: 4, speed: 300 },
-  attack: { row: 1, frames: 4, speed: 120 },
-  hit: { row: 2, frames: 2, speed: 150 }
-};
-
-/* =========================
-   INIT
-========================= */
-function init(){
-  loadSprite(playerEl, player.sprite);
-  loadSprite(enemyEl, enemy.sprite);
-  startAnim("idle");
-  loadGame();
-  autoCultivation();
-  log("🌱 Bắt đầu tu tiên...");
-}
-init();
-
-/* =========================
-   SPRITE FUNCTIONS
-========================= */
-function loadSprite(el, file){
-  el.style.backgroundImage = `url(assets/${file})`;
-}
-
-function startAnim(type){
-  clearInterval(animInterval);
-  currentAnim = type;
-  frameIndex = 0;
-  const cfg = SPRITE[type];
-  animInterval = setInterval(()=>{
-    frameIndex = (frameIndex + 1) % cfg.frames;
-    updateFrame();
-  }, cfg.speed);
-}
-
-function updateFrame(){
-  const cfg = SPRITE[currentAnim];
-  const x = frameIndex * SPRITE.frameW;
-  const y = cfg.row * SPRITE.frameH;
-  const el = currentAnim === "attack" ? playerEl : playerEl;
-  el.style.backgroundPosition = `-${x}px -${y}px`;
+  const line = document.createElement("div");
+  line.className = "log-line";
+  line.innerText = message;
+  logBox.appendChild(line);
+  logBox.scrollTop = logBox.scrollHeight;
 }
 
 /* =========================
-   GAMEPLAY
+   CORE UI UPDATE
 ========================= */
-function cultivate(){
-  if(player.cultivating) return;
-  player.cultivating = true;
-  log("🧘 Đang tu luyện...");
+function updateUI(char) {
+  if (!char) return;
+
+  const $ = id => document.getElementById(id);
+
+  $("charName").innerText = char.name;
+  $("charGender").innerText = char.gender === "male" ? "Nam" : "Nữ";
+  $("charStage").innerText = `Cảnh giới: ${char.stage}`;
+  $("charExp").innerText =
+    `Linh khí: ${Math.floor(char.exp)} / ${Math.floor(char.expMax)}`;
+  $("charHp").innerText =
+    `HP: ${Math.floor(char.hp)} / ${Math.floor(char.maxHp)}`;
+  $("charAtk").innerText = `ATK: ${Math.floor(char.atk)}`;
+  $("charDef").innerText = `DEF: ${Math.floor(char.def)}`;
+
+  renderLinhCan(char);
+  renderTienThien(char);
+  renderCongPhap(char);
 }
 
-function autoCultivation(){
-  setInterval(()=>{
-    if(!player.cultivating) return;
-    player.exp += 2;
-    if(player.exp >= player.expMax){
-      player.exp = 0;
-      player.stage++;
-      player.expMax += 40;
-      player.atk += 3;
-      player.maxHp += 10;
-      player.hp = player.maxHp;
-      log(`✨ Đột phá cảnh giới! → Stage ${player.stage}`);
-    }
-    saveGame();
-  }, 1000);
+/* =========================
+   RENDER LINH CĂN
+========================= */
+function renderLinhCan(char) {
+  const box = document.getElementById("linhCan");
+  if (!box) return;
+  box.innerHTML = "";
+
+  char.linh_can.forEach(id => {
+    const lc = LINH_CAN.find(l => l.id === id);
+    if (!lc) return;
+
+    const div = document.createElement("div");
+    div.className = "tag linh-can";
+    div.innerText = lc.name;
+    box.appendChild(div);
+  });
 }
 
-function battle(){
-  if(player.hp <= 0){
-    log("💀 Trọng thương, không thể chiến đấu");
+/* =========================
+   RENDER TIÊN THIÊN
+========================= */
+function renderTienThien(char) {
+  const box = document.getElementById("tienThien");
+  if (!box) return;
+  box.innerHTML = "";
+
+  char.tien_thien.forEach(tt => {
+    const div = document.createElement("div");
+    div.className = `tag pham-${tt.pham}`;
+    div.innerText = `${tt.name} (${PHAM_CHAT[tt.pham].name})`;
+    box.appendChild(div);
+  });
+}
+
+/* =========================
+   RENDER CÔNG PHÁP
+========================= */
+function renderCongPhap(char) {
+  const box = document.getElementById("congPhap");
+  if (!box) return;
+  box.innerHTML = "";
+
+  if (!char.cong_phap) {
+    box.innerText = "Chưa tu luyện công pháp";
     return;
   }
-  log("⚔️ Giao chiến!");
-  startAnim("attack");
-  setTimeout(()=>{
-    enemy.hp -= player.atk;
-    flash(enemyEl);
-    if(enemy.hp <= 0){
-      winBattle();
-    }else{
-      enemyAttack();
-    }
-  }, 400);
-}
 
-function enemyAttack(){
-  setTimeout(()=>{
-    player.hp -= enemy.atk;
-    flash(playerEl);
-    if(player.hp <= 0){
-      log("💀 Bại trận...");
-      player.hp = Math.floor(player.maxHp/2);
-    }else{
-      log(`❤️ HP: ${player.hp}/${player.maxHp}`);
-    }
-    startAnim("idle");
-    saveGame();
-  }, 400);
-}
+  const cp = CONG_PHAP.find(c => c.id === char.cong_phap);
+  if (!cp) return;
 
-function winBattle(){
-  log("🎉 Chiến thắng!");
-  enemy.hp = 80 + player.stage*10;
-  enemy.atk += 1;
-  player.exp += 20;
-  startAnim("idle");
-  saveGame();
+  box.innerText = `${cp.name} (${cp.cap.toUpperCase()} – ${PHAM_CHAT[cp.pham].name})`;
 }
 
 /* =========================
-   EFFECTS
+   BATTLE UI
 ========================= */
-function flash(el){
-  el.style.filter="brightness(1.8)";
-  setTimeout(()=>el.style.filter="",120);
-}
+function updateBattleUI(state) {
+  const box = document.getElementById("battle");
+  if (!box) return;
 
-/* =========================
-   LOG
-========================= */
-function log(txt){
-  logEl.innerHTML += `<div>${txt}</div>`;
-  logEl.scrollTop = logEl.scrollHeight;
-}
-
-/* =========================
-   SAVE / LOAD
-========================= */
-function saveGame(){
-  localStorage.setItem("tutien_save", JSON.stringify(player));
-}
-function loadGame(){
-  const save = localStorage.getItem("tutien_save");
-  if(save){
-    Object.assign(player, JSON.parse(save));
-    log("📦 Đã tải dữ liệu tu luyện");
+  if (!state) {
+    box.style.display = "none";
+    return;
   }
-     }
+
+  box.style.display = "block";
+  document.getElementById("enemyName").innerText = state.enemy.name;
+  document.getElementById("enemyHp").innerText =
+    `HP: ${Math.floor(state.enemy.hp)} / ${state.enemy.maxHp}`;
+}
+
+/* =========================
+   INVENTORY UI
+========================= */
+function updateInventoryUI(char) {
+  const box = document.getElementById("inventory");
+  if (!box) return;
+
+  box.innerHTML = "";
+  char.inventory.forEach(id => {
+    const item = TRANG_BI.find(i => i.id === id);
+    if (!item) return;
+
+    const btn = document.createElement("button");
+    btn.className = `item ${item.rarity}`;
+    btn.innerText = item.name;
+    btn.onclick = () => InventorySystem.equipItem(id);
+    box.appendChild(btn);
+  });
+}
+
+/* =========================
+   MAP UI
+========================= */
+function updateMapUI(map) {
+  document.getElementById("mapName").innerText = map.name;
+  document.getElementById("mapDesc").innerText = map.description;
+}
+
+/* =========================
+   ANIMATION HOOK (TẠM)
+========================= */
+function playAnimation(animationKey) {
+  log(`🎬 Hiệu ứng: ${animationKey}`);
+}
+
+/* =========================
+   BREAKTHROUGH BUTTON
+========================= */
+function showBreakthroughButton() {
+  const btn = document.getElementById("breakBtn");
+  if (btn) btn.style.display = "block";
+}
+
+function hideBreakthroughButton() {
+  const btn = document.getElementById("breakBtn");
+  if (btn) btn.style.display = "none";
+}
+
+/* =========================
+   GAME INIT
+========================= */
+function initGame() {
+  currentCharacter = CharacterSystem.loadCharacter();
+
+  if (!currentCharacter) {
+    log("⚠️ Chưa có nhân vật. Hãy tạo nhân vật trước.");
+    return;
+  }
+
+  log(`👤 Xin chào ${currentCharacter.name}`);
+  updateUI(currentCharacter);
+
+  CultivationSystem.applyOfflineProgress();
+  CultivationSystem.start();
+  hideBreakthroughButton();
+}
+
+/* =========================
+   GLOBAL BUTTON HOOK
+========================= */
+window.startCultivation = () => {
+  CultivationSystem.start();
+  log("🧘 Bắt đầu tu luyện");
+};
+
+window.stopCultivation = () => {
+  CultivationSystem.stop();
+  log("⏸️ Dừng tu luyện");
+};
+
+window.breakthrough = () => {
+  CultivationSystem.breakthrough();
+  hideBreakthroughButton();
+};
+
+window.enterMap = id => MapSystem.enterMap(id);
+window.exploreMap = id => MapSystem.explore(id);
+
+window.useSkill = id => BattleSystem.useSkill(id);
+
+/* =========================
+   AUTO BOOT
+========================= */
+window.onload = initGame;
