@@ -43,7 +43,7 @@
 
     <button onclick="toggleCultivation()">🧘 Tu luyện / Dừng</button>
     <button onclick="breakThrough()">⚡ Đột phá</button>
-
+    <button onclick="openCharacterPanel()">📜 Nhân vật</button>
     <div class="panel">
       <h3>Bản đồ</h3>
       <button onclick="goMap(1)">🌿 Linh Sơn</button>
@@ -66,7 +66,16 @@
     <div id="bagBox">(Chưa có vật phẩm)</div>
     <button onclick="backToGame()">Quay lại</button>
   </section>
+<!-- CHARACTER PANEL -->
+<section id="character-panel" class="screen hidden">
+  <h2>📜 Thông Tin Nhân Vật</h2>
 
+  <div id="character-panel-content" class="panel">
+    <!-- render an toàn -->
+  </div>
+
+  <button onclick="closeCharacterPanel()">Quay lại</button>
+    </section>
 </div>
 
 <script src="data.js"></script>
