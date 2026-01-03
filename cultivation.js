@@ -1,35 +1,37 @@
-function toggleCultivation(){
-  const c=loadChar();
-  c.cultivating=!c.cultivating;
-  saveChar(c);
+let selectedGender = null;
+let rolledRoot = null;
+
+function selectGender(g) {
+  selectedGender = g;
 }
 
-setInterval(()=>{
-  const c=loadChar();
-  if(!c||!c.cultivating) return;
+function rollCharacter() {
+  rolledRoot = rollSpiritRoot();
+  const el = document.getElementById("roll-result");
+  if (el) el.innerText = rolledRoot.typeName;
+}
 
-  const r=REALMS[c.realmIndex];
-  c.qi+=1*c.root.speed;
-  if(c.qi>=r.maxQi){
-    c.qi=r.maxQi;
+function confirmCharacter() {
+  const name = document.getElementById("char-name").value.trim();
+  if (!name || !selectedGender || !rolledRoot) {
+    alert("Thiếu thông tin");
+    return;
   }
-  saveChar(c);
-  render();
-},1000);
 
-function breakThrough(){
-  const c=loadChar();
-  const r=REALMS[c.realmIndex];
-  if(c.qi<r.maxQi) return alert("Chưa đủ linh khí");
+  const c = {
+    name,
+    gender: selectedGender,
+    age: 16,
+    lifespan: 120,
+    realmIndex: 0,
+    stage: 1,
+    qi: 0,
+    root: rolledRoot,
+    stats: { hp: 100, atk: 10, def: 5 },
+    cultivating: false
+  };
 
-  c.qi=0;
-  c.stage++;
-  if(c.stage>r.maxStage){
-    c.stage=1;
-    c.realmIndex++;
-    c.lifespan+=50;
-  }
   recalcStats(c);
   saveChar(c);
-  render();
+  showGame();
 }
