@@ -10,112 +10,77 @@
 
 <div id="app">
 
-  <!-- ================= LOGIN ================= -->
+  <!-- LOGIN -->
   <section id="login-screen" class="screen">
-    <h1>🌸 TU TIÊN THẾ GIỚI 🌸</h1>
-
-    <input id="username" type="text" placeholder="Tài khoản">
+    <h1>🌸 Tu Tiên Thế Giới 🌸</h1>
+    <input id="username" placeholder="Tài khoản">
     <input id="password" type="password" placeholder="Mật khẩu">
-
     <button onclick="login()">Đăng nhập / Đăng ký</button>
-
-    <!-- DEV ONLY -->
-    <button onclick="localStorage.clear();location.reload()">
-      🔄 Reset dữ liệu
-    </button>
   </section>
 
-  <!-- ================= CREATE CHARACTER ================= -->
+  <!-- CREATE -->
   <section id="create-screen" class="screen hidden">
     <h2>✨ Tạo Nhân Vật ✨</h2>
-
-    <input id="char-name" type="text" placeholder="Tên nhân vật">
+    <input id="char-name" placeholder="Tên nhân vật">
 
     <div class="gender">
       <button onclick="selectGender('Nam')">Nam</button>
       <button onclick="selectGender('Nữ')">Nữ</button>
     </div>
 
-    <div id="roll-result" class="panel">
-      <p>Chưa roll linh căn & tiên thiên</p>
-    </div>
+    <div id="roll-result" class="panel">Chưa roll</div>
 
     <button onclick="rollCharacter()">🎲 Roll</button>
-    <button onclick="confirmCharacter()">✔️ Xác nhận</button>
+    <button onclick="confirmCharacter()">✔ Xác nhận</button>
   </section>
 
-  <!-- ================= GAME MAIN ================= -->
+  <!-- GAME -->
   <section id="game-screen" class="screen hidden">
-    <h2 id="charInfo">Nhân vật</h2>
 
     <div class="panel">
-      <p id="realmInfo"></p>
-      <p id="qiInfo"></p>
-      <p id="cultivationInfo"></p>
+      <h3>📜 Bảng Thông Tin Nhân Vật</h3>
+      <div id="characterInfo"></div>
     </div>
 
     <button onclick="toggleCultivation()">🧘 Tu luyện / Dừng</button>
     <button onclick="breakThrough()">⚡ Đột phá</button>
 
-    <button onclick="startBattle()">⚔️ Khiêu chiến</button>
+    <div class="panel">
+      <h3>🗺 Bản đồ</h3>
+      <button onclick="goMap(1)">🌿 Linh Sơn</button>
+      <button onclick="goMap(2)">🔥 Hỏa Vực</button>
+      <button onclick="goMap(3)">❄️ Băng Nguyên</button>
+    </div>
+
     <button onclick="openInventory()">🎒 Kho đồ</button>
-<div class="panel">
-  <h3>🗺 Bản đồ</h3>
-
-  <button onclick="startBattle(1)">🌿 Linh Sơn</button>
-  <button onclick="startBattle(2)">🔥 Hỏa Vực</button>
-  <button onclick="startBattle(3)">❄️ Băng Nguyên</button>
-
-  <p style="font-size:13px;opacity:0.8">
-    Boss xuất hiện mỗi 10 tầng
-  </p>
-  </div>
     <div id="log" class="log"></div>
   </section>
 
-  <!-- ================= BATTLE ================= -->
+  <!-- BATTLE -->
   <section id="battle" class="screen hidden">
     <h2>⚔️ Chiến Đấu</h2>
-
-    <div class="battle-field">
-      <div class="unit">
-        <div id="playerSprite" class="sprite player"></div>
-        <p id="playerHP"></p>
-      </div>
-
-      <div class="unit">
-        <div id="monsterSprite" class="sprite monster"></div>
-        <p id="monsterHP"></p>
-      </div>
-    </div>
-
-    <div id="skillBar"></div>
-
-    <button onclick="endBattle()">🏃 Rút lui</button>
+    <p id="playerHP"></p>
+    <p id="monsterHP"></p>
     <div id="battleLog" class="log"></div>
+    <button onclick="endBattle()">⬅ Rút lui</button>
   </section>
 
-  <!-- ================= INVENTORY ================= -->
+  <!-- INVENTORY -->
   <section id="inventory" class="screen hidden">
     <h2>🎒 Kho Đồ</h2>
-
-    <div id="equipBox" class="panel"></div>
-    <hr>
-    <div id="bagBox" class="panel"></div>
-
-    <button onclick="backToGame()">⬅️ Quay lại</button>
+    <div id="bagBox"></div>
+    <button onclick="backToGame()">⬅ Quay lại</button>
   </section>
 
 </div>
 
-<!-- ================= SCRIPTS (THỨ TỰ BẮT BUỘC) ================= -->
 <script src="data.js"></script>
 <script src="game.js"></script>
 <script src="character.js"></script>
+<script src="stats.js"></script>
 <script src="cultivation.js"></script>
 <script src="map.js"></script>
 <script src="battle.js"></script>
 <script src="inventory.js"></script>
-
 </body>
-  </html>
+</html>
