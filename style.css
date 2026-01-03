@@ -1,0 +1,141 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(#0f172a, #020617);
+  color: #e5e7eb;
+}
+
+#app {
+  max-width: 480px;
+  margin: auto;
+  padding-bottom: 40px;
+}
+
+/* HEADER */
+.header {
+  padding: 12px;
+  background: #020617;
+  border-bottom: 2px solid #334155;
+}
+
+.header .title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header .stage {
+  font-size: 14px;
+  color: #facc15;
+}
+
+/* PANEL */
+.panel {
+  background: rgba(15, 23, 42, 0.95);
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+}
+
+.panel h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #93c5fd;
+}
+
+.panel h3 {
+  font-size: 14px;
+  margin: 6px 0;
+  color: #a5b4fc;
+}
+
+/* ROW */
+.row {
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+/* BUTTON */
+button {
+  background: linear-gradient(#1e293b, #020617);
+  color: #e5e7eb;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* BUTTON ROW */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* TAG */
+.tag-box {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: #1e293b;
+  border: 1px solid #475569;
+}
+
+.pham-ha { color:#9ca3af }
+.pham-trung { color:#22c55e }
+.pham-thuong { color:#3b82f6 }
+.pham-cuc { color:#a855f7 }
+.pham-tien { color:#facc15 }
+
+/* INVENTORY */
+.inventory-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.inventory-box button {
+  font-size: 12px;
+  padding: 6px;
+}
+
+/* BATTLE */
+.skill-bar {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* LOG */
+#log {
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 12px;
+  background: #020617;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.log-line {
+  margin-bottom: 2px;
+}
+
+/* DESC */
+.desc {
+  font-size: 13px;
+  color: #cbd5f5;
+    }
