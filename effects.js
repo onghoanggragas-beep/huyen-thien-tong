@@ -23,7 +23,10 @@ function getCultivationRate(c) {
       }
     }
   }
-
+// Công pháp
+  if (c.cultivationMethod && c.cultivationMethod.cultivateRate) {
+    rate *= 1 + c.cultivationMethod.cultivateRate;
+  }
   return rate;
 }
 
