@@ -141,3 +141,52 @@ function randomMany(arr, count) {
   copy.sort(() => 0.5 - Math.random());
   return copy.slice(0, count);
       }
+/* ================= CÔNG PHÁP ================= */
+
+const CULTIVATION_METHODS = [
+  {
+    id: 1,
+    name: "Ngũ Hành Dẫn Khí Quyết",
+    tier: "Hoàng",
+    grade: "Hạ",
+    elements: ["Kim", "Mộc", "Thủy", "Hỏa", "Thổ"],
+    cultivateRate: 0.15,
+    desc: "Công pháp nhập môn, dẫn dắt linh khí ngũ hành"
+  },
+  {
+    id: 2,
+    name: "Kim Linh Quyết",
+    tier: "Hoàng",
+    grade: "Trung",
+    elements: ["Kim"],
+    cultivateRate: 0.25,
+    desc: "Tu luyện kim linh khí, tăng tốc hấp thu"
+  },
+  {
+    id: 3,
+    name: "Mộc Linh Trường Sinh Công",
+    tier: "Huyền",
+    grade: "Hạ",
+    elements: ["Mộc"],
+    cultivateRate: 0.35,
+    desc: "Công pháp mộc hệ, sinh cơ bền bỉ"
+  },
+  {
+    id: 4,
+    name: "Ngũ Hành Quy Nguyên Công",
+    tier: "Địa",
+    grade: "Thượng",
+    elements: ["Kim", "Mộc", "Thủy", "Hỏa", "Thổ"],
+    cultivateRate: 0.5,
+    desc: "Ngũ hành hợp nhất, căn cơ vững chắc"
+  },
+  {
+    id: 5,
+    name: "Thiên Đạo Luân Hồi Kinh",
+    tier: "Thiên",
+    grade: "Cực",
+    elements: ["Kim", "Mộc", "Thủy", "Hỏa", "Thổ"],
+    cultivateRate: 0.8,
+    desc: "Công pháp tối thượng, thuận theo thiên đạo"
+  }
+];
