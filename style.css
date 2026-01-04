@@ -299,3 +299,26 @@ h3 {
 .modal-box {
   pointer-events: auto;
   }
+/* ===== FORCE UI LAYER PRIORITY ===== */
+
+/* TOP BAR LUÔN TRÊN CÙNG */
+.top-bar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999 !important;
+  pointer-events: none;
+}
+
+/* CHO PHÉP BẤM RIÊNG CÁC PHẦN BÊN TRONG */
+.top-bar * {
+  pointer-events: auto;
+}
+
+/* CHẶN VIDEO / IFRAME CHE UI */
+video,
+iframe {
+  z-index: 1 !important;
+  position: relative !important;
+         }
