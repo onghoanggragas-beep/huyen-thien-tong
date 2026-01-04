@@ -44,7 +44,14 @@ function openMethodPanel() {
   document.getElementById("method-panel").classList.remove("hidden");
 }
 function closeModal() {
-  document.getElementById("map-panel")?.classList.add("hidden");
-  document.getElementById("method-panel")?.classList.add("hidden");
-  document.getElementById("map-confirm-panel")?.classList.add("hidden");
+  const ids = [
+    "map-panel",
+    "method-panel",
+    "map-confirm-panel"
+  ];
+
+  ids.forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("hidden");
+  });
 }
