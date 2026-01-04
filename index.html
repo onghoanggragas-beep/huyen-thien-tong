@@ -43,30 +43,52 @@
     <!-- thông tin nhân vật -->
   </div>
 
-    <button onclick="toggleCultivation()">🧘 Tu luyện / Dừng</button>
-    <button onclick="breakThrough()">⚡ Đột phá</button>
+    <!-- NHÂN VẬT TU LUYỆN -->
+<div class="cultivation-center">
+  <img
+    src="assets/meditation.png"
+    alt="Tu luyện"
+    class="cultivation-img"
+  />
+
+  <button onclick="toggleCultivation()">🧘 Tu luyện / Dừng</button>
+  <button onclick="breakThrough()">⚡ Đột phá</button>
+</div>
     <button onclick="openCharacterPanel()">📜 Nhân vật</button>
-    <div class="panel">
-      <h3>Bản đồ</h3>
+    <!-- MENU THU GỌN -->
+<div class="panel">
+
+  <!-- MAP -->
+  <div class="menu-item">
+    <button onclick="toggleMenu('map-menu')">🗺 Bản đồ</button>
+    <div id="map-menu" class="menu-content hidden">
       <button onclick="goMap(1)">🌿 Linh Sơn</button>
       <button onclick="goMap(2)">🔥 Hỏa Vực</button>
-   <div class="panel">
-  <h3>📘 Công pháp</h3>
-
-  <button onclick="learnCultivationMethod(1)">
-    Ngũ Hành Dẫn Khí Quyết
-  </button>
-  <button onclick="learnCultivationMethod(2)">
-    Kim Linh Quyết
-  </button>
-  <button onclick="learnCultivationMethod(3)">
-    Mộc Linh Trường Sinh Công
-  </button>
-   </div>
     </div>
+  </div>
 
-    <button onclick="openInventory()">🎒 Kho đồ</button>
-    <button onclick="logout()">🚪 Đăng xuất</button>
+  <!-- CÔNG PHÁP -->
+  <div class="menu-item">
+    <button onclick="toggleMenu('method-menu')">📘 Công pháp</button>
+    <div id="method-menu" class="menu-content hidden">
+      <button onclick="learnCultivationMethod(1)">
+        Ngũ Hành Dẫn Khí Quyết
+      </button>
+      <button onclick="learnCultivationMethod(2)">
+        Kim Linh Quyết
+      </button>
+      <button onclick="learnCultivationMethod(3)">
+        Mộc Linh Trường Sinh Công
+      </button>
+    </div>
+  </div>
+
+  <!-- KHÁC -->
+  <button onclick="openInventory()">🎒 Kho đồ</button>
+  <button onclick="openCharacterPanel()">📜 Nhân vật</button>
+  <button onclick="logout()" class="logout-btn">🚪 Đăng xuất</button>
+
+    </div>
   </section>
 
   <!-- BATTLE -->
@@ -105,5 +127,6 @@
 <script src="stats.js"></script>
 <script src="effects.js"></script>
 <script src="cultivationMethod.js"></script>
+<script src="ui.js"></script>
 </body>
 </html>
