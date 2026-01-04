@@ -57,10 +57,15 @@ function openMethodPanel() {
   document.getElementById("method-panel").classList.remove("hidden");
 }
 function closeModal() {
-  const ids = [
-    "map-panel",
-    "method-panel",
-    "map-confirm-panel"
+  isMapConfirmOpen = false;
+
+  ["map-panel", "method-panel", "map-confirm-panel"].forEach(
+    function (id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add("hidden");
+    }
+  );
+}
   ];
 
   ids.forEach(function (id) {
