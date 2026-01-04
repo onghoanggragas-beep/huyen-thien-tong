@@ -1,24 +1,20 @@
 /* =====================================================
    MAP SYSTEM
    - Enter map
-   - Switch to battle screen
-   (BẢN CŨ – ĐƠN GIẢN – ỔN ĐỊNH)
+   - Call combat system
+   (BẢN ĐÃ NỐI COMBAT)
 ===================================================== */
 
+/*
+  mapId:
+  1 = Linh Sơn
+  2 = Hỏa Vực
+  3 = Băng Nguyên
+*/
+
 function goMap(mapId) {
-  // Hiển thị màn hình battle
-  hideAllScreens();
-  document.getElementById("battle-screen").classList.remove("hidden");
+  if (!mapId) return;
 
-  // Hiển thị log chiến đấu đơn giản
-  var log = document.getElementById("battle-log");
-  if (!log) return;
-
-  if (mapId === 1) {
-    log.innerHTML = "🌿 Bạn tiến vào Linh Sơn và gặp một con Linh Thú!";
-  } else if (mapId === 2) {
-    log.innerHTML = "🔥 Bạn bước vào Hỏa Vực, nhiệt khí bức người!";
-  } else {
-    log.innerHTML = "❓ Bạn bước vào một khu vực lạ...";
-  }
+  // Gọi hệ thống combat
+  startBattle(mapId);
 }
