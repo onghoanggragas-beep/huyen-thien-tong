@@ -335,3 +335,28 @@ iframe {
 .modal::before {
   pointer-events: none;
     }
+/* =============================
+   FIX CLICK BỊ CHẶN TOÀN MÀN
+============================= */
+
+/* TẤT CẢ OVERLAY KHÔNG ĐƯỢC ĂN CLICK */
+.overlay,
+.dark,
+.mask,
+.bg,
+.modal::before {
+  pointer-events: none !important;
+}
+
+/* CHỈ MODAL BOX ĐƯỢC CLICK */
+.modal,
+.modal-box {
+  pointer-events: auto !important;
+}
+
+/* ĐẢM BẢO UI CHÍNH NHẬN CLICK */
+#game-root,
+.top-bar,
+.bottom-nav {
+  pointer-events: auto !important;
+  }
