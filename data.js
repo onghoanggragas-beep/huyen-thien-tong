@@ -190,3 +190,23 @@ const CULTIVATION_METHODS = [
     desc: "Công pháp tối thượng, thuận theo thiên đạo"
   }
 ];
+const MAPS = {
+  1: {
+    id: 1,
+    name: "Linh Sơn",
+    desc: "Linh khí dồi dào, quái vật yếu",
+    danger: "Thấp"
+  },
+  2: {
+    id: 2,
+    name: "Hỏa Vực",
+    desc: "Hỏa linh hoành hành, nguy hiểm",
+    danger: "Trung"
+  },
+  3: {
+    id: 3,
+    name: "Băng Nguyên",
+    desc: "Hàn khí ăn mòn, cực kỳ nguy hiểm",
+    danger: "Cao"
+  }
+};
