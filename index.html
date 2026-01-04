@@ -88,11 +88,27 @@
   </section>
 
   <!-- BATTLE -->
-  <section id="battle-screen" class="screen hidden">
-    <h2>Chiến đấu</h2>
-    <div id="battle-log"></div>
-    <button onclick="endBattle()">Rút lui</button>
-  </section>
+<section id="battle-screen" class="screen hidden battle-ui">
+  <div class="battle-field">
+    <div id="player" class="fighter player idle">
+      <img src="assets/character.png">
+      <div class="hp-bar"><div id="player-hp"></div></div>
+    </div>
+
+    <div id="enemy" class="fighter enemy idle">
+      <img src="assets/enemy.png">
+      <div class="hp-bar"><div id="enemy-hp"></div></div>
+    </div>
+  </div>
+
+  <div id="battle-log" class="panel"></div>
+
+  <div class="battle-actions">
+    <button onclick="playerAttack()">⚔️ Đánh thường</button>
+    <button onclick="playerSkill()">🔥 Võ kỹ</button>
+    <button onclick="endBattle()">❌ Rút lui</button>
+  </div>
+</section>
 
   <!-- INVENTORY -->
   <section id="inventory-screen" class="screen hidden">
