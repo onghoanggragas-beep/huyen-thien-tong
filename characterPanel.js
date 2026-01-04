@@ -73,8 +73,12 @@ function renderCharacterPanel() {
   }
 // ===== CHỈ SỐ NHÂN VẬT =====
   if (typeof getCharacterStats === "function") {
-    var stats = getCharacterStats(c);
+    var baseStats = getCharacterStats(c);
+var stats = baseStats;
 
+if (typeof applyStatEffects === "function") {
+  stats = applyStatEffects(baseStats, c);
+}
     html += "<hr>";
     html += "<b>📊 Chỉ số:</b><br>";
     html += "Cấp độ: " + stats.level + "<br>";
