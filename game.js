@@ -3,8 +3,13 @@
    - Login / Register
    - Screen control
    - Character storage
-   (BẢN ỔN ĐỊNH – KHÔNG RÚT GỌN)
+   (BẢN ỔN ĐỊNH – GIỮ NGUYÊN + FIX)
 ===================================================== */
+
+/* ================= GLOBAL PLAYER ================= */
+
+// 🔧 BỔ SUNG: player dùng chung cho toàn game
+let player = null;
 
 /* ================= SCREEN CONTROL ================= */
 
@@ -28,6 +33,12 @@ function showCreate() {
 function showGame() {
   hideAllScreens();
   document.getElementById("game-screen").classList.remove("hidden");
+
+  // 🔧 FIX: load player + update UI
+  player = loadChar();
+  if (player && typeof updateHeader === "function") {
+    updateHeader();
+  }
 }
 
 function showBattle() {
@@ -79,6 +90,10 @@ function login() {
       "character",
       JSON.stringify(accData.character)
     );
+
+    // 🔧 FIX: đồng bộ player
+    player = accData.character;
+
     showGame();
   } else {
     showCreate();
@@ -111,6 +126,9 @@ function saveChar(character) {
     "character",
     JSON.stringify(character)
   );
+
+  // 🔧 FIX: cập nhật player toàn cục
+  player = character;
 }
 
 /* ================= AUTO LOAD ================= */
@@ -136,20 +154,24 @@ document.addEventListener("DOMContentLoaded", function () {
       "character",
       JSON.stringify(accData.character)
     );
+
+    // 🔧 FIX: gán player
+    player = accData.character;
+
     showGame();
   } else {
     showCreate();
   }
 });
+
 /* ================= LOGOUT ================= */
 
 function logout() {
-  // Xóa user hiện tại
   localStorage.removeItem("currentUser");
-
-  // Xóa nhân vật đang load (session)
   localStorage.removeItem("character");
 
-  // Quay về màn đăng nhập
+  // 🔧 FIX: reset player
+  player = null;
+
   showLogin();
-}
+      }
