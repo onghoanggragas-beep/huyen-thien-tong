@@ -38,57 +38,42 @@
   </section>
 
   <!-- GAME -->
-  <section id="game-screen" class="screen hidden">
-  <div id="character-header" class="panel">
-    <!-- thông tin nhân vật -->
-  </div>
+  <section id="game-screen" class="screen hidden game-ui">
 
-    <!-- NHÂN VẬT TU LUYỆN -->
-<div class="cultivation-center">
-  <img
-    src="assets/meditation.png"
-    alt="Tu luyện"
-    class="cultivation-img"
-  />
+  <!-- HEADER -->
+  <div class="top-bar">
+    <div class="char-info">
+      <div id="char-name-ui">Kira</div>
+      <div id="char-realm-ui">Luyện Khí – Tầng 1</div>
+    </div>
 
-  <button onclick="toggleCultivation()">🧘 Tu luyện / Dừng</button>
-  <button onclick="breakThrough()">⚡ Đột phá</button>
-</div>
-    <button onclick="openCharacterPanel()">📜 Nhân vật</button>
-    <!-- MENU THU GỌN -->
-<div class="panel">
-
-  <!-- MAP -->
-  <div class="menu-item">
-    <button onclick="toggleMenu('map-menu')">🗺 Bản đồ</button>
-    <div id="map-menu" class="menu-content hidden">
-      <button onclick="goMap(1)">🌿 Linh Sơn</button>
-      <button onclick="goMap(2)">🔥 Hỏa Vực</button>
+    <div class="qi-bar">
+      <div class="qi-fill" id="qi-fill"></div>
+      <span id="qi-text">0 / 100</span>
     </div>
   </div>
 
-  <!-- CÔNG PHÁP -->
-  <div class="menu-item">
-    <button onclick="toggleMenu('method-menu')">📘 Công pháp</button>
-    <div id="method-menu" class="menu-content hidden">
-      <button onclick="learnCultivationMethod(1)">
-        Ngũ Hành Dẫn Khí Quyết
-      </button>
-      <button onclick="learnCultivationMethod(2)">
-        Kim Linh Quyết
-      </button>
-      <button onclick="learnCultivationMethod(3)">
-        Mộc Linh Trường Sinh Công
-      </button>
-    </div>
+  <!-- NHÂN VẬT -->
+  <div class="character-area">
+    <img src="assets/character.png" class="character-sprite" />
   </div>
 
-  <!-- KHÁC -->
-  <button onclick="openInventory()">🎒 Kho đồ</button>
-  <button onclick="openCharacterPanel()">📜 Nhân vật</button>
-  <button onclick="logout()" class="logout-btn">🚪 Đăng xuất</button>
+  <!-- ICON MENU GIỮA -->
+  <div class="floating-menu">
+    <button onclick="toggleCultivation()">🧘</button>
+    <button onclick="openInventory()">🎒</button>
+    <button onclick="openCharacterPanel()">📜</button>
+    <button onclick="toggleMenu('map-menu')">🗺</button>
+  </div>
 
-    </div>
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <button onclick="toggleCultivation()">🧘<br>Tu luyện</button>
+    <button onclick="toggleMenu('map-menu')">🗺<br>Bản đồ</button>
+    <button onclick="toggleMenu('method-menu')">📘<br>Công pháp</button>
+    <button onclick="logout()">🚪<br>Thoát</button>
+  </div>
+
   </section>
 
   <!-- BATTLE -->
