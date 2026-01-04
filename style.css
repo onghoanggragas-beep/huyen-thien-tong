@@ -322,3 +322,16 @@ iframe {
   z-index: 1 !important;
   position: relative !important;
          }
+.modal {
+  z-index: 99998;
+  pointer-events: auto;
+}
+
+.modal-box {
+  pointer-events: auto;
+}
+
+/* NỀN ĐEN KHÔNG ĂN CLICK */
+.modal::before {
+  pointer-events: none;
+    }
