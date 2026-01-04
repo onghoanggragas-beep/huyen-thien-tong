@@ -28,7 +28,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 /* ================= FORM ================= */
@@ -88,9 +88,10 @@ h3 {
   margin: 10px 0;
 }
 
-/* ================= BATTLE / LOG ================= */
+/* ================= LOG / BAG ================= */
 
-#battle-log {
+#battle-log,
+#bagBox {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   padding: 10px;
@@ -98,41 +99,33 @@ h3 {
   margin-bottom: 10px;
 }
 
-#bagBox {
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  padding: 10px;
-  min-height: 120px;
-}
-/* ===== ACCORDION MENU ===== */
-
-.menu-item {
-  margin-bottom: 8px;
-}
-
-.menu-content {
-  margin-top: 6px;
-}
-
-.menu-content button {
-  background: #ffe8a3;
-  font-size: 14px;
-}
 /* ================= GAME UI ================= */
 
 .game-ui {
   position: relative;
   background: url("assets/bg.jpg") center / cover no-repeat;
   overflow: hidden;
+  padding-top: 80px;
+  padding-bottom: 70px;
 }
 
-/* ===== TOP BAR ===== */
+/* ================= TOP BAR ================= */
 
 .top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 12px 24px;
   font-size: 14px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0)
+  );
 }
 
 .char-info {
@@ -143,13 +136,14 @@ h3 {
   font-weight: bold;
 }
 
+/* ================= QI BAR ================= */
+
 .qi-bar {
   width: 140px;
   height: 16px;
   background: rgba(255,255,255,0.2);
   border-radius: 8px;
   position: relative;
-  overflow: visible;
 }
 
 .qi-fill {
@@ -160,19 +154,20 @@ h3 {
 
 .qi-bar span {
   position: absolute;
-  top: -20px;
+  top: -18px;
   right: 0;
   font-size: 12px;
-  color: #fff;
   white-space: nowrap;
 }
 
-/* ===== CHARACTER ===== */
+/* ================= CHARACTER ================= */
 
 .character-area {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .character-sprite {
@@ -180,13 +175,15 @@ h3 {
   max-width: 80%;
 }
 
-/* ===== FLOATING ICON ===== */
+/* ================= FLOATING MENU ================= */
 
 .floating-menu {
   display: flex;
   justify-content: center;
   gap: 12px;
   margin-top: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .floating-menu button {
@@ -196,13 +193,14 @@ h3 {
   font-size: 20px;
 }
 
-/* ===== BOTTOM BAR ===== */
+/* ================= BOTTOM BAR ================= */
 
 .bottom-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 1000;
   background: rgba(0,0,0,0.6);
   display: flex;
   justify-content: space-around;
@@ -214,33 +212,21 @@ h3 {
   color: #fff;
   font-size: 12px;
 }
-/* ===== FIX TOP BAR OVERLAY ===== */
 
-.top-bar {
-  position: relative;
-  z-index: 10;
-  padding-top: 14px;
-  padding-bottom: 20px;
-}
-
-.qi-bar {
-  z-index: 11;
-}
-
-.qi-bar span {
-  z-index: 12;
-  pointer-events: none;
-  }
-/* ===== MODAL PANEL ===== */
+/* ================= MODAL ================= */
 
 .modal {
   position: fixed;
   inset: 0;
+  z-index: 2000;
   background: rgba(0,0,0,0.6);
-  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.modal.hidden {
+  display: none;
 }
 
 .modal-box {
@@ -248,115 +234,18 @@ h3 {
   padding: 16px;
   border-radius: 12px;
   width: 80%;
-  max-width: 300px;
+  max-width: 320px;
 }
 
 .modal-box button {
   width: 100%;
   margin-top: 8px;
-  }
-/* ===== FIX QI BAR ALWAYS ON TOP ===== */
-
-.top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  padding: 10px 12px 24px;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0)
-  );
 }
 
-.character-area,
-.cultivation-center,
-.floating-menu {
-  position: relative;
-  z-index: 1;
-}
+/* ================= MEDIA ================= */
 
-.qi-bar {
-  position: relative;
-  z-index: 1000;
-}
-
-.qi-bar span {
-  position: absolute;
-  top: -18px;
-  right: 0;
-  z-index: 1001;
-  color: #fff;
-  font-size: 12px;
+/* iframe / video không phá click UI */
+iframe,
+video {
   pointer-events: none;
-  }
-.modal {
-  pointer-events: auto;
-}
-
-.modal-box {
-  pointer-events: auto;
-  }
-/* ===== FORCE UI LAYER PRIORITY ===== */
-
-/* TOP BAR LUÔN TRÊN CÙNG */
-.top-bar {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 99999 !important;
-  pointer-events: none;
-}
-
-/* CHO PHÉP BẤM RIÊNG CÁC PHẦN BÊN TRONG */
-.top-bar * {
-  pointer-events: auto;
-}
-
-/* CHẶN VIDEO / IFRAME CHE UI */
-video,
-iframe {
-  z-index: 1 !important;
-  position: relative !important;
-         }
-.modal {
-  z-index: 99998;
-  pointer-events: auto;
-}
-
-.modal-box {
-  pointer-events: auto;
-}
-
-/* NỀN ĐEN KHÔNG ĂN CLICK */
-.modal::before {
-  pointer-events: none;
-    }
-/* =============================
-   FIX CLICK BỊ CHẶN TOÀN MÀN
-============================= */
-
-/* TẤT CẢ OVERLAY KHÔNG ĐƯỢC ĂN CLICK */
-.overlay,
-.dark,
-.mask,
-.bg,
-.modal::before {
-  pointer-events: none !important;
-}
-
-/* CHỈ MODAL BOX ĐƯỢC CLICK */
-.modal,
-.modal-box {
-  pointer-events: auto !important;
-}
-
-/* ĐẢM BẢO UI CHÍNH NHẬN CLICK */
-#game-root,
-.top-bar,
-.bottom-nav {
-  pointer-events: auto !important;
   }
