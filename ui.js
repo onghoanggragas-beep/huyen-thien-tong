@@ -19,7 +19,27 @@ function toggleMenu(id) {
 function openMapPanel() {
   document.getElementById("map-panel").classList.remove("hidden");
 }
+let selectedMapId = null;
 
+function confirmEnterMap(mapId) {
+  const map = MAPS[mapId];
+  if (!map) return;
+
+  selectedMapId = mapId;
+
+  document.getElementById("map-name").innerText = "🗺 " + map.name;
+  document.getElementById("map-desc").innerText = map.desc;
+  document.getElementById("map-danger").innerText = map.danger;
+
+  document.getElementById("enter-map-btn").onclick = function () {
+    closeModal();
+    goMap(selectedMapId);
+  };
+
+  document
+    .getElementById("map-confirm-panel")
+    .classList.remove("hidden");
+}
 function openMethodPanel() {
   document.getElementById("method-panel").classList.remove("hidden");
 }
