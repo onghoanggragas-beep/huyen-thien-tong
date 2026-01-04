@@ -214,3 +214,20 @@ h3 {
   color: #fff;
   font-size: 12px;
 }
+/* ===== FIX TOP BAR OVERLAY ===== */
+
+.top-bar {
+  position: relative;
+  z-index: 10;
+  padding-top: 14px;
+  padding-bottom: 20px;
+}
+
+.qi-bar {
+  z-index: 11;
+}
+
+.qi-bar span {
+  z-index: 12;
+  pointer-events: none;
+  }
