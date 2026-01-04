@@ -104,3 +104,17 @@ h3 {
   padding: 10px;
   min-height: 120px;
 }
+/* ===== ACCORDION MENU ===== */
+
+.menu-item {
+  margin-bottom: 8px;
+}
+
+.menu-content {
+  margin-top: 6px;
+}
+
+.menu-content button {
+  background: #ffe8a3;
+  font-size: 14px;
+}
