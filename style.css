@@ -231,3 +231,27 @@ h3 {
   z-index: 12;
   pointer-events: none;
   }
+/* ===== MODAL PANEL ===== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-box {
+  background: #123;
+  padding: 16px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 300px;
+}
+
+.modal-box button {
+  width: 100%;
+  margin-top: 8px;
+  }
