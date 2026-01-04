@@ -249,3 +249,34 @@ iframe,
 video {
   pointer-events: none;
   }
+/* ================= ACTION BAR ================= */
+
+.action-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+  position: relative;
+  z-index: 2;
+}
+
+.action-bar button {
+  width: auto;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Nút đột phá nổi bật */
+#breakthrough-btn {
+  background: linear-gradient(90deg, #ffb347, #ffcc33);
+  color: #000;
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+    }
