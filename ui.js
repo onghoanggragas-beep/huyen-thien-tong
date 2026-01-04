@@ -43,8 +43,8 @@ function confirmEnterMap(mapId) {
 function openMethodPanel() {
   document.getElementById("method-panel").classList.remove("hidden");
 }
-
 function closeModal() {
-  document.getElementById("map-panel").classList.add("hidden");
-  document.getElementById("method-panel").classList.add("hidden");
+  document.getElementById("map-panel")?.classList.add("hidden");
+  document.getElementById("method-panel")?.classList.add("hidden");
+  document.getElementById("map-confirm-panel")?.classList.add("hidden");
 }
