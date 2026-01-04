@@ -78,37 +78,55 @@ const TALENTS = [
     id: 1,
     name: "Căn Cốt Siêu Phàm",
     grade: "Thượng",
-    desc: "Căn cơ vượt trội, tăng chỉ số cơ bản"
+    desc: "Căn cơ vượt trội, tăng toàn bộ chỉ số",
+    effect: {
+      statPercent: 0.1
+    }
   },
   {
     id: 2,
     name: "Sinh Mệnh Dồi Dào",
     grade: "Trung",
-    desc: "Sinh lực mạnh mẽ, tăng HP"
+    desc: "Sinh lực mạnh mẽ, tăng HP",
+    effect: {
+      hpPercent: 0.2
+    }
   },
   {
     id: 3,
     name: "Thiên Đạo Chiếu Cố",
     grade: "Cực",
-    desc: "Được thiên đạo ưu ái, tu luyện nhanh"
+    desc: "Tu luyện nhanh hơn người thường",
+    effect: {
+      cultivateRate: 0.3
+    }
   },
   {
     id: 4,
     name: "Khí Vận Gia Thân",
     grade: "Thượng",
-    desc: "Vận may cao, dễ gặp kỳ ngộ"
+    desc: "Khí vận tăng cao, tu luyện thuận lợi",
+    effect: {
+      cultivateRate: 0.15
+    }
   },
   {
     id: 5,
     name: "Chiến Ý Bất Diệt",
     grade: "Trung",
-    desc: "Ý chí chiến đấu mạnh, tăng ATK"
+    desc: "Chiến đấu càng mạnh, tăng ATK",
+    effect: {
+      atkPercent: 0.2
+    }
   },
   {
     id: 6,
     name: "Tâm Cảnh Vững Vàng",
     grade: "Hạ",
-    desc: "Tinh thần ổn định, giảm nguy cơ thất bại đột phá"
+    desc: "Tinh thần ổn định, tăng DEF",
+    effect: {
+      defPercent: 0.2
+    }
   }
 ];
 
