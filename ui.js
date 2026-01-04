@@ -17,9 +17,14 @@ function toggleMenu(id) {
   target.classList.toggle("hidden");
 }
 function openMapPanel() {
-  alert("🗺 Bản đồ\n\n• Linh Sơn\n• Hỏa Vực\n• Băng Nguyên");
+  document.getElementById("map-panel").classList.remove("hidden");
 }
 
 function openMethodPanel() {
-  alert("📘 Công pháp\n\n• Ngũ Hành Dẫn Khí Quyết\n• Kim Linh Quyết\n• Mộc Linh Trường Sinh Công");
+  document.getElementById("method-panel").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("map-panel").classList.add("hidden");
+  document.getElementById("method-panel").classList.add("hidden");
 }
