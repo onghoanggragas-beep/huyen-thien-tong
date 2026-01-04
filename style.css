@@ -144,24 +144,27 @@ h3 {
 }
 
 .qi-bar {
-  width: 120px;
-  height: 12px;
+  width: 140px;
+  height: 16px;
   background: rgba(255,255,255,0.2);
-  border-radius: 6px;
+  border-radius: 8px;
   position: relative;
+  overflow: visible;
 }
 
 .qi-fill {
   height: 100%;
-  background: #5cff8d;
-  border-radius: 6px;
-  width: 0%;
+  background: linear-gradient(90deg, #4cff8f, #2fdc6f);
+  border-radius: 8px;
 }
 
 .qi-bar span {
   position: absolute;
-  top: -18px;
+  top: -20px;
+  right: 0;
   font-size: 12px;
+  color: #fff;
+  white-space: nowrap;
 }
 
 /* ===== CHARACTER ===== */
