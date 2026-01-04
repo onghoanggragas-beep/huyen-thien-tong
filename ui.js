@@ -23,8 +23,16 @@ let selectedMapId = null;
 
 function confirmEnterMap(mapId) {
   const map = MAPS[mapId];
+let selectedMapId = null;
+let isMapConfirmOpen = false;
+
+function confirmEnterMap(mapId) {
+  if (isMapConfirmOpen) return; // CHỐNG TỰ NỔI
+
+  const map = MAPS[mapId];
   if (!map) return;
 
+  isMapConfirmOpen = true;
   selectedMapId = mapId;
 
   document.getElementById("map-name").innerText = "🗺 " + map.name;
@@ -35,6 +43,11 @@ function confirmEnterMap(mapId) {
     closeModal();
     goMap(selectedMapId);
   };
+
+  document
+    .getElementById("map-confirm-panel")
+    .classList.remove("hidden");
+}
 
   document
     .getElementById("map-confirm-panel")
