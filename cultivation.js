@@ -1,72 +1,122 @@
-/* =====================================================
+/* =========================
    CULTIVATION SYSTEM
-   - Idle cultivation
-   - Breakthrough
-   (BẢN CŨ – ỔN ĐỊNH)
-===================================================== */
+========================= */
 
-/* ================= TOGGLE ================= */
+let cultivating = false;
+let cultivateTimer = null;
 
+/* =========================
+   TOGGLE CULTIVATION
+========================= */
 function toggleCultivation() {
-  var c = loadChar();
-  if (!c) return;
+  cultivating = !cultivating;
 
-  c.cultivating = !c.cultivating;
+  const btn = document.getElementById("cultivate-btn");
+  if (!btn) return;
 
-  if (c.cultivating) {
-    alert("Bắt đầu tu luyện");
+  if (cultivating) {
+    btn.innerText = "⏸ Dừng tu luyện";
+    startCultivation();
   } else {
-    alert("Dừng tu luyện");
+    btn.innerText = "🧘 Tu luyện";
+    stopCultivation();
   }
-
-  saveChar(c);
 }
 
-/* ================= IDLE LOOP ================= */
+/* =========================
+   START / STOP
+========================= */
+function startCultivation() {
+  if (cultivateTimer) return;
 
-// Tu luyện mỗi 1 giây
-setInterval(function () {
-  var c = loadChar();
-  if (!c) return;
-
-  if (!c.cultivating) return;
-
-  // Tăng linh khí theo linh căn
-  var rate = 1;
-  if (typeof getCultivationRate === "function") {
-  rate = getCultivationRate(c);
+  cultivateTimer = setInterval(() => {
+    gainQi();
+  }, 1000);
 }
-  c.qi += rate;
 
-  saveChar(c);
-}, 1000);
+function stopCultivation() {
+  clearInterval(cultivateTimer);
+  cultivateTimer = null;
+}
 
-/* ================= BREAK THROUGH ================= */
+/* =========================
+   GAIN QI
+========================= */
+function gainQi() {
+  if (!player) return;
 
-function breakThrough() {
-  var c = loadChar();
-  if (!c) return;
+  const gain = player.qiGain || 1;
+  player.qi += gain;
 
-  // Giới hạn đột phá đơn giản (bản cũ)
-  var maxQi = 100;
+  if (player.qi >= player.qiMax) {
+    player.qi = player.qiMax;
+    stopCultivation();
+    cultivating = false;
 
-  if (c.qi < maxQi) {
-    alert("Chưa đủ linh khí để đột phá");
-    return;
+    showBreakthroughButton(); // 🔥 QUAN TRỌNG
   }
 
-  c.qi = 0;
-  c.stage += 1;
+  updateQiUI();
+  saveGame();
+}
 
-  // Nếu vượt tầng tối đa → tăng cảnh giới
-  if (c.stage > 9) {
-    c.stage = 1;
-    c.realmIndex += 1;
+/* =========================
+   BREAKTHROUGH BUTTON
+========================= */
+function showBreakthroughButton() {
+  let btn = document.getElementById("breakthrough-btn");
 
-    alert("Đột phá cảnh giới!");
-  } else {
-    alert("Đột phá tầng thành công!");
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.id = "breakthrough-btn";
+    btn.innerText = "⚡ Đột phá";
+    btn.onclick = breakthrough;
+
+    btn.className = "breakthrough-btn";
+    document.querySelector(".character-area").appendChild(btn);
   }
 
-  saveChar(c);
-      }
+  btn.style.display = "block";
+}
+
+/* =========================
+   BREAKTHROUGH
+========================= */
+function breakthrough() {
+  if (!player) return;
+  if (player.qi < player.qiMax) return;
+
+  player.qi = 0;
+  player.realmLevel += 1;
+  player.qiMax = Math.floor(player.qiMax * 1.5);
+  player.qiGain += 0.5;
+
+  updateQiUI();
+  updateHeader();
+  hideBreakthroughButton();
+  saveGame();
+
+  alert("✨ Đột phá thành công!");
+}
+
+/* =========================
+   HIDE BUTTON
+========================= */
+function hideBreakthroughButton() {
+  const btn = document.getElementById("breakthrough-btn");
+  if (btn) btn.style.display = "none";
+}
+
+/* =========================
+   UPDATE UI
+========================= */
+function updateQiUI() {
+  const fill = document.getElementById("qi-fill");
+  const text = document.getElementById("qi-text");
+
+  if (!fill || !text) return;
+
+  const percent = (player.qi / player.qiMax) * 100;
+  fill.style.width = percent + "%";
+  text.innerText = `${player.qi.toFixed(1)} / ${player.qiMax}`;
+     }
