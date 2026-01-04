@@ -32,8 +32,11 @@ setInterval(function () {
   if (!c.cultivating) return;
 
   // Tăng linh khí theo linh căn
-  var gain = c.root.speed || 1;
-  c.qi += gain;
+  var rate = 1;
+  if (typeof getCultivationRate === "function") {
+  rate = getCultivationRate(c);
+}
+  c.qi += rate;
 
   saveChar(c);
 }, 1000);
