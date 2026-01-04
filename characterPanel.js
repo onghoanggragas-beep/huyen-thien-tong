@@ -71,6 +71,17 @@ function renderCharacterPanel() {
   } else {
     html += "Không có<br>";
   }
+// ===== CHỈ SỐ NHÂN VẬT =====
+  if (typeof getCharacterStats === "function") {
+    var stats = getCharacterStats(c);
 
+    html += "<hr>";
+    html += "<b>📊 Chỉ số:</b><br>";
+    html += "Cấp độ: " + stats.level + "<br>";
+    html += "HP: " + stats.hp + "<br>";
+    html += "ATK: " + stats.atk + "<br>";
+    html += "DEF: " + stats.def + "<br>";
+    html += "SPD: " + stats.spd + "<br>";
+}
   box.innerHTML = html;
 }
