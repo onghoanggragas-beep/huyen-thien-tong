@@ -16,3 +16,10 @@ function toggleMenu(id) {
 
   target.classList.toggle("hidden");
 }
+function openMapPanel() {
+  alert("🗺 Bản đồ\n\n• Linh Sơn\n• Hỏa Vực\n• Băng Nguyên");
+}
+
+function openMethodPanel() {
+  alert("📘 Công pháp\n\n• Ngũ Hành Dẫn Khí Quyết\n• Kim Linh Quyết\n• Mộc Linh Trường Sinh Công");
+}
