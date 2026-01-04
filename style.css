@@ -118,3 +118,96 @@ h3 {
   background: #ffe8a3;
   font-size: 14px;
 }
+/* ================= GAME UI ================= */
+
+.game-ui {
+  position: relative;
+  background: url("assets/bg.jpg") center / cover no-repeat;
+  overflow: hidden;
+}
+
+/* ===== TOP BAR ===== */
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.char-info {
+  text-align: left;
+}
+
+#char-name-ui {
+  font-weight: bold;
+}
+
+.qi-bar {
+  width: 120px;
+  height: 12px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 6px;
+  position: relative;
+}
+
+.qi-fill {
+  height: 100%;
+  background: #5cff8d;
+  border-radius: 6px;
+  width: 0%;
+}
+
+.qi-bar span {
+  position: absolute;
+  top: -18px;
+  font-size: 12px;
+}
+
+/* ===== CHARACTER ===== */
+
+.character-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.character-sprite {
+  width: 200px;
+  max-width: 80%;
+}
+
+/* ===== FLOATING ICON ===== */
+
+.floating-menu {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.floating-menu button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+/* ===== BOTTOM BAR ===== */
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+}
+
+.bottom-bar button {
+  background: none;
+  color: #fff;
+  font-size: 12px;
+}
