@@ -46,3 +46,24 @@ function renderCharacterHeader() {
 setInterval(function () {
   renderCharacterHeader();
 }, 1000);
+function syncTopUI() {
+  var c = loadChar();
+  if (!c) return;
+
+  document.getElementById("char-name-ui").innerText =
+    c.name + " (" + c.gender + ")";
+
+  if (REALMS[c.realmIndex]) {
+    document.getElementById("char-realm-ui").innerText =
+      REALMS[c.realmIndex].name + " – Tầng " + c.stage;
+
+    var maxQi = REALMS[c.realmIndex].maxQi;
+    var percent = Math.min(100, (c.qi / maxQi) * 100);
+
+    document.getElementById("qi-fill").style.width = percent + "%";
+    document.getElementById("qi-text").innerText =
+      c.qi.toFixed(1) + " / " + maxQi;
+  }
+}
+
+setInterval(syncTopUI, 1000);
